@@ -1,0 +1,349 @@
+/* Login Styles */
+
+#loginAreaDiv {
+    display: flex;
+    margin: 3%;
+    border-radius: 16px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#loginImage {
+    width: 30%;
+    padding: 20%;
+    background-color: red;
+    border-radius: 16px 0 0 16px;
+}
+
+#loginImageText {
+    font-size: 50px;
+}
+
+#trinInitTagline {
+    font-size: 20px;
+}
+
+#loginFormDiv {
+    padding: 10%;
+    text-align: center;
+}
+
+#loginText {
+    font-size: 50px;
+    padding-bottom: 20%;
+}
+
+.loginTextInput {
+    border: none;
+    border-bottom: #7a7a7a 1px solid;
+    padding: 7%;
+    margin: 10% 0 10% 0;
+}
+
+#loginSubmit {
+    font-size: 20px;
+    background-color: red;
+    margin-top: 20%;
+    padding: 5% 37% 5% 37%;
+    outline: none;
+    border-radius: 5px;
+    border: 1px red solid;
+}
+
+
+/* Create Project View Styles */
+
+#createProjectAreaDiv {
+    margin: 2% 3% 3% 3%;
+}
+
+#createProjectTitle {
+    font-size: 45px;
+    margin-bottom: 2%;
+}
+
+.createProjPrompt {
+    font-size: 25px;
+    margin: 2% 0 2% 0;
+}
+
+.creatProjInputs {
+    width: 60%;
+    padding: 1% 0 1% 2%;    
+    text-align: left;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid gray;
+}
+
+#addImageDiv {
+    display: flex;
+    width: 58%;
+    margin: 3% 0 2% 0;
+    padding: 2%;
+    border-radius: 5px;
+    box-shadow: 0 0px 5px 0 rgba(92, 92, 92, 0.2), 0 6px 20px 0 rgba(92, 92, 92, 0.2);   
+}
+
+#addImageTextDiv {
+    padding-right: 35%;
+}
+
+#addImageText {
+    font-size: 20px;
+}
+
+#addImageInput {
+    font-size: 15px;
+    outline: none;
+}
+
+#submitCreateProject {
+    font-size: 20px;
+    background-color: red;
+    padding: 1% 5% 1% 5%;
+    outline: none;
+    border-radius: 5px;
+    border: 1px red solid;
+}
+
+/* Messaging View Styles */
+
+#messagingDiv {
+    display: flex;
+    margin: 2%;
+}
+
+.chatDivs {
+    margin: 1%;
+    padding: 3%;
+    box-shadow: 0 0px 5px 0 rgba(92, 92, 92, 0.2), 0 6px 20px 0 rgba(92, 92, 92, 0.2); 
+    border-radius: 16px;
+}
+
+#currentChatsDiv {
+    width: 25%;
+}
+
+.chatPageTitle {
+    font-size: 30px;
+    padding-bottom: 3%;
+}
+
+#myChatsHeaderDiv {
+    display: flex;
+}
+
+#addChatButtonDiv {
+    width: 10%;
+    padding: 0 0 0 50%;
+}
+
+#addChatButton {
+    font-size: 30px;
+    width: 100%;
+    border: none;
+    outline: none;
+    color: red;
+    background-color: white;
+}
+
+#chatSearchDiv {
+    margin: 5% 0 5% 0;
+}
+
+#chatSearch {
+    font-size: 15px;
+    width: 95%;
+    padding: 5% 0 5% 5%;
+    border-radius: 16px;
+    outline: none;
+    border: 1px solid grey;
+}
+
+#chatListDiv {
+    padding-bottom: 100%;
+}
+
+.sampleChatCard {
+    display: flex;
+    margin: 5% 1% 5% 1%;
+    padding: 5% 10% 5% 20%;
+    box-shadow: 0 0px 5px 0 rgba(92, 92, 92, 0.2), 0 6px 20px 0 rgba(92, 92, 92, 0.2); 
+    border-radius: 16px;
+}
+
+.chatCardText {
+    width: 80%;
+}
+
+.chatCardNotifInfoDiv {
+    display: inline-block;
+    text-align: center;
+    color: white;
+    height: 25px;
+    width: 25px;
+    margin: 5% 0 0 10%;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.notifNumber {
+    padding-top: 20%;
+}
+
+#selectedChat {
+    width: 80%;
+}
+
+.chatCardTitle {
+    font-size: 20px;
+    padding-bottom: 5%;
+}
+
+.chatPreview {
+    color: gray;
+}
+
+#selectedChatMessagesDiv {
+    height: 73%;
+    background-color: rgb(245, 245, 245);
+    border-radius: 16px;
+    padding: 5%;
+}
+
+#chatMessages {
+    height: 85%;
+}
+
+.chatMessageReceived {
+    width: 50%;
+    font-size: 17px;
+    background-color: white;
+    padding: 3% 3% 3% 3%;
+    border-radius: 16px;
+}
+
+.chatMessageSent {
+    float: right;
+    width: 50%;
+    font-size: 17px;
+    color: white;
+    background-color: red;
+    padding: 3% 3% 3% 3%;
+    border-radius: 16px;
+}
+
+#selectedChatInputDiv {
+    display: flex;
+}
+
+#selectedChatInput {
+    overflow: hidden;
+    padding: 1% 0 0 3%;
+    border-radius: 16px;
+    outline: none;
+}
+
+#sendChatButton {
+    background-color: red;
+    color: white;
+    border-radius: 16px;
+    outline: none;
+    padding: 3%;
+    margin-left: 1%;
+    border: 1px solid red;
+}
+
+/* Project View Styles */
+
+#projectViewAreaDiv {
+    margin: 2% 3% 3% 3%;
+}
+
+#projectViewTitle {
+    font-size: 45px;
+    margin-bottom: 2%;
+}
+
+.subtitle {
+    font-size: 25px;
+    margin: 1% 0 1% 0;
+}
+
+#projectImage {
+    width: 15%;
+    padding: 10%;
+    background-color: red;
+    border-radius: 16px 16px 16px 16px;
+}
+
+#message {
+    font-size: 10px;
+    background-color: red;
+    /* padding: 1% 1% 1% 1%; */
+    outline: none;
+    border-radius: 5px;
+    border: 1px red solid;
+}
+
+#createCommentDiv {
+    display: flex;
+    width: 58%;
+    margin: 3% 0 2% 0;
+    padding: 2%;
+    border-radius: 5px;
+    box-shadow: 0 0px 5px 0 rgba(92, 92, 92, 0.2), 0 6px 20px 0 rgba(92, 92, 92, 0.2);   
+}
+
+#createCommentText {
+    width: 60%;
+    padding: 1% 0 1% 2%;    
+    text-align: left;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid gray;
+}
+
+#addComment {
+    font-size: 15px;
+    background-color: red;
+    padding: 1% 5% 1% 5%;
+    outline: none;
+    border-radius: 5px;
+    border: 1px red solid;
+}
+
+/* Project Browser Styles */
+
+#projectBrowserAreaDiv {
+    margin: 2% 3% 3% 3%;
+}
+
+#allProjectTitle {
+    font-size: 45px;
+    margin-bottom: 2%;
+}
+
+.projectCard {
+    /* display: flex; */
+    width: 58%;
+    margin: 3% 0 2% 0;
+    padding: 2%;
+    border-radius: 5px;
+    box-shadow: 0 0px 5px 0 rgba(92, 92, 92, 0.2), 0 6px 20px 0 rgba(92, 92, 92, 0.2);   
+}
+
+.projectName {
+    font-size: 20px;
+    margin-bottom: 2%;
+    font-weight: bold;
+}
+
+.projectPicture {
+    width: 10%;
+    padding: 10%;
+    background-color: red;
+    border-radius: 16px;
+    text-align: right;
+    margin-left: auto;
+}

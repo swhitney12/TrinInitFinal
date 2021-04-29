@@ -1,0 +1,8 @@
+  @()(implicit request: RequestHeader, flash: Flash)
+
+@main("React Chat") {
+    <input type="hidden" id="csrfToken" value="@helper.CSRF.getToken.value">
+
+    <div id="trininit-root"></div>
+    <script src="@routes.Assets.versioned("javascript/trininit.js")"></script>
+}
