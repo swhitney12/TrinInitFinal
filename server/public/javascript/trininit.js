@@ -46,6 +46,27 @@ class LoginComponent extends React.Component {
     }
 }
 
+class MainComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            //add state variables here
+        };
+    }
+
+    render() {
+        return ce('div', null, 
+            ce('div', {id:'siteBanner'},
+                ce('form', {id:'searchProjectsFormMain'},
+                    ce('input', {type:'text', id:'searchProjectsMainInput', placeholder:'Search for projects and users'})
+                ),
+                //add image here as well
+                //add a p element for username display            
+            )
+        )
+    }
+}
+
 ReactDOM.render(
     ce(TrininitReactComponent, null, null),
     document.getElementById("trininit-root")
