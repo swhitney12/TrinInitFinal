@@ -1,3 +1,8 @@
+/* Body Styles */
+body {
+    margin: 0px;
+}
+
 /* Login Styles */
 
 #loginAreaDiv {
@@ -49,4 +54,175 @@
     border: 1px #7a7a7a solid;
 }
 
+/* Profile styles */
 
+#siteBanner {
+    display: flex;
+    padding-bottom: 0.5%;
+    padding-top: 0.8%;
+    align-items: center;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 -4px 20px 0 rgb(0 0 0 / 20%);
+}
+
+#searchProjectsFormBannerDiv {
+    margin-left: 40%;
+}
+
+#searchProjectsBannerInput {
+    padding: 7% 20% 7% 8%;
+    width: 200%;
+    font-size: 20px;
+}
+
+#toProfileDiv {
+    display: flex;
+    margin-left: 32%;
+    align-items: center;
+}
+
+#profileImageDivBanner {
+    width:20%;
+}
+
+#profileImgBanner {
+    width: 100%;
+    border-radius: 50%;
+}
+
+#usernameDisplayDivBanner {
+    margin-left: 5%;
+}
+
+#usernameDisplay {
+    font-size: 20px;
+}
+
+#profileBody {
+    display: flex;
+    margin: 2% 10% 0 10%;
+}
+
+#leftProfileDiv {
+    background-color: rgb(223, 223, 223);
+    padding: 2%;
+    width: 25%;
+}
+
+#leftProfileImageDiv {
+    text-align: center;
+}
+
+#leftProfileImg {
+    width: 70%;
+    border-radius: 50%;
+}
+
+#leftProfileInfoDiv {
+    padding-left: 25%;
+}
+
+.leftProfileInfoWrapper {
+    margin: 15% 0% 15% 0%;
+}
+
+.profileMainSubheader1 {
+    font-size: 20px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.profileMainSubheader2 {
+    font-size: 15px;
+    margin: 0px
+}
+
+#editProfileBtnDiv {
+    margin: 10% 0 2% 0;
+    text-align: center;
+}
+
+#editProfileBtn {
+    padding: 4% 7% 4% 7%;
+    font-size: 15px;
+    background-color: transparent;
+}
+
+#middleProfileDiv {
+    margin: 0 2% 0 2%;
+    width: 110%;
+    background-color: rgb(223, 223, 223);
+}
+
+#myProjectSecTitleDiv {
+    padding: 1% 0 1% 0;
+    background-color: rgb(139, 139, 139);
+    text-align: center;
+}
+
+#myProjectSecTitle {
+    margin: 0%;
+    font-size: 30px;
+}
+
+.myProjListing {
+    background-color: transparent;
+    margin: 5% 4% 0% 4%;
+    padding: 0.5% 2% 0% 2%;
+    border: 1px solid black;
+}
+
+.myProjListingTitleDiv {
+    display: flex;
+    margin-top: 2%;
+    align-items: baseline;
+
+}
+
+.myProjListingTitle {
+    margin: 0%;
+    font-size: 25px;
+}
+
+.myProjListingCreator {
+    margin: 0% 0% 0% 1%;
+}
+
+.myProjListingDesc {
+    /*do font stuff */
+}
+
+.myProjListingEngagementDiv {
+    display: flex;
+    align-items: center;
+}
+
+vl {
+    height: 1em;
+    margin: 0% 1% 2% 1%;
+    border-left: 1px solid black;
+}
+
+.myProjListingEngagementInfo {
+    margin-top: 0%;
+}
+
+#rightProfileDiv {
+ /* Here if needed */
+}
+
+#profileInterestsDiv {
+    background-color: rgb(223, 223, 223);
+    margin-bottom: 10%;
+    padding: 5% 7% 5% 7%;
+}
+
+#profileSkillsDiv {
+    background-color: rgb(223, 223, 223);
+    padding: 5% 7% 5% 7%;
+}
+
+.profileMainSubheader3 {
+    font-size: 20px;
+    margin-top: 1%;
+    margin-bottom: 5%;
+}

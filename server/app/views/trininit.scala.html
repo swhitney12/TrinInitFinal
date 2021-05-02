@@ -2,7 +2,9 @@
 
 @main("React Chat") {
     <input type="hidden" id="csrfToken" value="@helper.CSRF.getToken.value">
+    <input type="hidden" id="defaultimg" value="@routes.Assets.versioned("images/default_profimg.jpg")">
 
     <div id="trininit-root"></div>
     <script src="@routes.Assets.versioned("javascript/trininit.js")"></script>
 }
+
