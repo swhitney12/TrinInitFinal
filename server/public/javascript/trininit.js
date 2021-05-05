@@ -10,7 +10,7 @@ class TrininitReactComponent extends React.Component {
     
     render () {
         // return ce(LoginComponent)
-        return ce(MainComponent)
+        return ce(CreateProjectComponent)
     }
 }
 
@@ -201,9 +201,6 @@ class MainComponent extends React.Component {
                         //insert code here to populate this, use below as a template
                         ce('h4', {className: 'mainSubheader2'}, 'Liked Project 1')
                     )
-
-
-                    
                 ),
 
                 ce('div', {id: 'rightMainDiv'},
@@ -225,6 +222,44 @@ class MainComponent extends React.Component {
                     )
                 ),
 
+            )
+        )
+    }
+}
+
+class CreateProjectComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            //add state variables here
+        };
+    }
+
+    render() {  
+        return ce('div', {id: 'createProjBGDiv'},
+            ce('div', {id: "createProjDiv"},
+                ce('div', {className: 'createProjSecTitleDiv'}, 
+                    ce('h1', {className: 'createProjSecTitle'}, 'New Project')
+                ),
+
+                ce('hr'),
+
+                ce('div', {id: 'newProjectTitlePromptDiv'},
+                    ce('h3', {className: 'newProjectPrompt'}, 'Project Title'),
+                    ce('input', {type: 'text', id: 'newProjectTitleInput', placeholder: 'Enter Your Project Name...'})
+                ),
+
+                ce('div', {id: 'newProjectDescPromptDiv'},
+                    ce('h3', {className: 'newProjectPrompt'},'Description'),
+                    ce('textarea', {id: 'newProjectDescInput', rows: '4', cols: '50', placeholder: 'Enter Your Project Description...'})
+                ),
+
+                ce('div', {id: 'newProjectCollabPromptDiv'},
+                    ce('h3', {className: 'newProjectPrompt'}, 'Invite Collaborator'),
+                    ce('textarea', {id: 'newProjectCollabInput', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...'})
+                ),
+
+                ce('button', {id: 'createNewProjectBtn'}, 'Create Project')
             )
         )
     }

@@ -227,13 +227,15 @@ vl {
     margin-bottom: 5%;
 }
 
+/* Main Styles */
+
 #mainBody {
     display: flex;
     background: transparent;
 }
 
 #leftMainDiv {
-    background-color: teal; 
+    background-color: rgb(223, 223, 223); 
     padding: 2%;
     width: 15%;
     height: 81vh;
@@ -272,3 +274,14 @@ vl {
     padding-left: 8%;
 }
 
+/* Create Project Styles */
+
+#createProjDiv {
+    margin: 2% 20% 2% 20%;
+    padding: 2%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.createProjSecTitle {
+    margin: 0;
+}
