@@ -10,7 +10,7 @@ class TrininitReactComponent extends React.Component {
     
     render () {
         // return ce(LoginComponent)
-        return ce(ProjectViewComponent)
+        return ce(ProfileComponent)
     }
 }
 
@@ -61,6 +61,8 @@ class ProfileComponent extends React.Component {
     render() {
         return ce('div', null, 
             ce('div', {id:'siteBanner'},
+
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('form', {id:'searchProjectsFormBanner'},
                         ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
@@ -159,6 +161,8 @@ class MainComponent extends React.Component {
     render() {
         return ce('div', null, 
             ce('div', {id:'siteBanner'},
+
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('form', {id:'searchProjectsFormBanner'},
                         ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
@@ -237,8 +241,9 @@ class CreateProjectComponent extends React.Component {
 
     render() {  
         return ce('div', {id: 'createProjBGDiv'},
-
             ce('div', {id:'siteBanner'},
+
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('form', {id:'searchProjectsFormBanner'},
                         ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
@@ -294,6 +299,27 @@ class ProjectViewComponent extends React.Component {
 
     render() {
         return ce('div', null, 
+
+        
+            ce('div', {id:'siteBanner'},
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
+                ce('div', {id: 'searchProjectsFormBannerDiv'},
+                    ce('form', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
+                    )
+                ),
+
+                ce('div', {id: 'toProfileDiv'},
+                    ce('div', {id: 'profileImageDivBanner'},
+                        ce('img', {id:'profileImgBanner', src: profImg}),
+                    ),
+
+                    ce('div', {id: 'usernameDisplayDivBanner'},
+                        ce('a', {id:'usernameDisplay'}, 'rainihuynh')
+                    )
+                ),
+            ),
+
             ce('div', {id: 'projectViewDiv'},
                 ce('div', {id: 'projectViewTitleDiv'},
                     ce('h1', {id: 'projectViewTitle'}, 'Project Title')
