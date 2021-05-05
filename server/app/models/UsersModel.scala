@@ -41,6 +41,34 @@ class UsersModel(db: Database)(implicit ec: ExecutionContext) {
       } else Future.successful(None)
     }
   }
+  
+  /**
+    * Return all data of a user given a user's ID
+    *
+    * @param userId
+    * @return a user's data if it exists in database
+    */
+  def getUserData(userId: Int): Future[Option[UserData]] = {
+    val matches = db.run(Users.filter(userRow => userRow.id === userId).result)
+    matches.map(userRows => userRows.headOption match {
+      case None => None
+      case Some(user) => Some(UserData(user.username, user.password, user.major, user.graduationyear, user.githublink)) 
+    })
+  }
+  
+  /**
+    * Return all data of a user given a username
+    *
+    * @param userId
+    * @return a user's data if it exists in database
+    */
+  def getUserData(username: String): Future[Option[UserData]] = {
+    val matches = db.run(Users.filter(userRow => userRow.username === username).result)
+    matches.map(userRows => userRows.headOption match {
+      case None => None
+      case Some(user) => Some(UserData(user.username, user.password, user.major, user.graduationyear, user.githublink)) 
+    })
+  }
 }
 
 case class UserData(username: String, password: String, major: String,
