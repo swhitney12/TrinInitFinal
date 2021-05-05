@@ -164,34 +164,34 @@ body {
     font-size: 30px;
 }
 
-.myProjListing {
+.ProjListing {
     background-color: transparent;
     margin: 5% 4% 0% 4%;
     padding: 0.5% 2% 0% 2%;
     border: 1px solid black;
 }
 
-.myProjListingTitleDiv {
+.ProjListingTitleDiv {
     display: flex;
     margin-top: 2%;
     align-items: baseline;
 
 }
 
-.myProjListingTitle {
+.ProjListingTitle {
     margin: 0%;
     font-size: 25px;
 }
 
-.myProjListingCreator {
+.ProjListingCreator {
     margin: 0% 0% 0% 1%;
 }
 
-.myProjListingDesc {
+.ProjListingDesc {
     /*do font stuff */
 }
 
-.myProjListingEngagementDiv {
+.ProjListingEngagementDiv {
     display: flex;
     align-items: center;
 }
@@ -202,7 +202,7 @@ vl {
     border-left: 1px solid black;
 }
 
-.myProjListingEngagementInfo {
+.ProjListingEngagementInfo {
     margin-top: 0%;
 }
 
@@ -226,3 +226,49 @@ vl {
     margin-top: 1%;
     margin-bottom: 5%;
 }
+
+#mainBody {
+    display: flex;
+    background: transparent;
+}
+
+#leftMainDiv {
+    background-color: teal; 
+    padding: 2%;
+    width: 15%;
+    height: 81vh;
+}
+
+#myProjectsMainTitleDiv {
+    display: flex;
+    padding-bottom: 3%;
+}
+
+#addProjectMainBtn {
+    margin: 12% 0% 0 30% ;
+}
+
+#myProjectsMainListDiv {
+    padding-bottom: 10%;
+}
+
+.mainSubheader1 {
+    margin: 0;
+}
+
+#likedProjectsMainTitleDiv {
+    padding-bottom: 3%;
+}
+
+#likedProjectsMainListDiv {
+    padding-bottom: 10%;
+}
+
+.mainSubheader2 {
+    margin: 1%;
+}
+
+#rightMainDiv {
+    padding-left: 8%;
+}
+
