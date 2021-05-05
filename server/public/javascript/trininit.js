@@ -10,7 +10,7 @@ class TrininitReactComponent extends React.Component {
     
     render () {
         // return ce(LoginComponent)
-        return ce(CreateProjectComponent)
+        return ce(ProjectViewComponent)
     }
 }
 
@@ -237,6 +237,25 @@ class CreateProjectComponent extends React.Component {
 
     render() {  
         return ce('div', {id: 'createProjBGDiv'},
+
+            ce('div', {id:'siteBanner'},
+                ce('div', {id: 'searchProjectsFormBannerDiv'},
+                    ce('form', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
+                    )
+                ),
+
+                ce('div', {id: 'toProfileDiv'},
+                    ce('div', {id: 'profileImageDivBanner'},
+                        ce('img', {id:'profileImgBanner', src: profImg}),
+                    ),
+
+                    ce('div', {id: 'usernameDisplayDivBanner'},
+                        ce('a', {id:'usernameDisplay'}, 'rainihuynh')
+                    )
+                ),
+            ),
+
             ce('div', {id: "createProjDiv"},
                 ce('div', {className: 'createProjSecTitleDiv'}, 
                     ce('h1', {className: 'createProjSecTitle'}, 'New Project')
@@ -260,6 +279,79 @@ class CreateProjectComponent extends React.Component {
                 ),
 
                 ce('button', {id: 'createNewProjectBtn'}, 'Create Project')
+            )
+        )
+    }
+}
+
+class ProjectViewComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            //add state variables here
+        };
+    }
+
+    render() {
+        return ce('div', null, 
+            ce('div', {id: 'projectViewDiv'},
+                ce('div', {id: 'projectViewTitleDiv'},
+                    ce('h1', {id: 'projectViewTitle'}, 'Project Title')
+                ),
+
+                ce('div', {id: 'projectViewUserInfoDiv'},
+                    ce('div', {id: 'projectViewUserImgDiv'},
+                        ce('img', {id:'projectViewUserImg', src: profImg}),
+                    ),
+
+                    ce('div', {id: 'projectViewUserNameDiv'},
+                        ce('h2', {id: 'projectViewUserName'}, 'rainihuynh'),
+                    )
+                ),
+
+                ce('div', {id: 'projectUserInteractionDiv'},
+
+                    ce('div', {id: 'projectInterestBtnDiv'},
+                        ce('button', {id: 'projectInterestBtn'},
+                            ce('i', {className: "far fa-eye"})
+                        )
+                    ),
+
+                    ce('div', {id: 'projectLikeBtnDiv'},
+                        ce('button', {id: 'projectViewLikeBtn'},
+                            ce('i', {className: "far fa-heart"})
+                        )
+                    )
+                ),
+
+                ce('div', {id: 'projectViewDescDiv'},
+                    ce('p', {id: 'projectViewDesc'}, 'Duis non commodo tortor. Proin diam odio, aliquet sed tellus quis, maximus accumsan dolor. Donec egestas malesuada nibh, quis dignissim diam dictum non. Duis eleifend tristique congue. Maecenas in pharetra velit. Phasellus ac odio eget mi pharetra mattis. Suspendisse consectetur dapibus nunc et rhoncus. Vivamus pellentesque mattis lorem, in fringilla arcu placerat non. Fusce ac lectus velit.')
+                ),
+
+                ce('div', {id: 'projectViewCollabDiv'},
+                    ce('h2', {id: 'collaboratorPrompt'}, 'Collaborators'),
+                    ce('p', {className: 'collaboratorName'}, 'Collaborator Name')
+                ),
+
+                ce('div', {id: 'projectViewCommentDiv'},
+                    ce('h2', {id: 'commentInputHeader'}, 'Leave a Comment'),
+
+                    ce('div', {id: 'commentInputDiv'},
+                        ce('textarea', {id: 'commentInput', rows: '3', cols: '100', placeholder: 'Type Your Comment...'}),
+                        ce('button', {id: 'commentSendBtn'}, 
+                            ce('i', {className: 'fas fa-paper-plane'})
+                        )
+                    ),
+
+                    ce('hr'),
+                    ce('h2', {id: 'commentSecHeader'}, 'Comments'),
+
+                    ce('div', {className: 'commentCardDiv'}, 
+                        ce('h3', {className: 'commentSender'}, 'Sender Username'),
+                        ce('p', {className: 'commentContent'}, 'Here is the content of a comment'),
+                        ce('p', {className: 'sendTime'}, 'about 2 hours ago')
+                    )
+                )
             )
         )
     }

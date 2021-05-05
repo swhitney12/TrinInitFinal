@@ -285,3 +285,104 @@ vl {
 .createProjSecTitle {
     margin: 0;
 }
+
+/* Project View Styles */
+
+#projectViewDiv {
+    margin: 5% 2% 0 2%;
+    padding: 1% 3% 1% 3%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#projectViewTitle {
+    /* for fonts */
+}
+
+#projectViewUserInfoDiv {
+    display: flex;
+}
+
+#projectViewUserImgDiv {
+    width: 5%;
+}
+
+#projectViewUserImg {
+    width: 70%;
+    border-radius: 50%;
+}
+
+#projectViewUserNameDiv {
+    /* for future */
+}
+
+#projectViewUserName {
+    font-size: 15px;
+}
+
+#projectUserInteractionDiv {
+    display: flex;
+}
+
+#projectInterestBtnDiv {
+
+}
+
+#projectInterestBtn {
+ /* button styling */
+}
+
+#projectLikeBtnDiv {
+
+}
+
+#projectViewLikeBtn {
+ /* button styling */
+}
+
+#projectViewDescDiv {
+    /* for desc margins */
+}
+
+#projectViewDesc {
+    /* for font styles */
+}
+
+#collaboratorPrompt {
+    font-size: 20px;
+}
+
+#collaboratorName {
+    /* for coloring */
+}
+
+#commentInputHeader {
+    font-size: 20px;
+}
+
+#commentInputDiv {
+    display: flex;
+}
+
+#commentSendBtn {
+    /* button styles */
+}
+
+#commentSecHeader {
+    font-size: 20px;
+}
+
+.commentCardDiv {
+    margin: 0% 2% 0% 2%;
+}
+
+.commentSender {
+    font-size: 15px;
+}
+
+.commentContent {
+    /* fontstyling */
+}
+
+.sendTime {
+    color:rgb(139, 139, 139);
+}
