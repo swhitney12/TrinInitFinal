@@ -14,9 +14,32 @@ trait Tables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Users.schema
+  lazy val schema: profile.SchemaDescription = Tags.schema ++ Users.schema ++ Usertags.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
+
+  /** Entity class storing rows of table Tags
+   *  @param id Database column id SqlType(serial), AutoInc, PrimaryKey
+   *  @param tag Database column tag SqlType(varchar), Length(50,true) */
+  case class TagsRow(id: Int, tag: String)
+  /** GetResult implicit for fetching TagsRow objects using plain SQL queries */
+  implicit def GetResultTagsRow(implicit e0: GR[Int], e1: GR[String]): GR[TagsRow] = GR{
+    prs => import prs._
+    TagsRow.tupled((<<[Int], <<[String]))
+  }
+  /** Table description of table tags. Objects of this class serve as prototypes for rows in queries. */
+  class Tags(_tableTag: Tag) extends profile.api.Table[TagsRow](_tableTag, "tags") {
+    def * = (id, tag) <> (TagsRow.tupled, TagsRow.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = ((Rep.Some(id), Rep.Some(tag))).shaped.<>({r=>import r._; _1.map(_=> TagsRow.tupled((_1.get, _2.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column id SqlType(serial), AutoInc, PrimaryKey */
+    val id: Rep[Int] = column[Int]("id", O.AutoInc, O.PrimaryKey)
+    /** Database column tag SqlType(varchar), Length(50,true) */
+    val tag: Rep[String] = column[String]("tag", O.Length(50,varying=true))
+  }
+  /** Collection-like TableQuery object for table Tags */
+  lazy val Tags = new TableQuery(tag => new Tags(tag))
 
   /** Entity class storing rows of table Users
    *  @param id Database column id SqlType(serial), AutoInc, PrimaryKey
@@ -52,4 +75,30 @@ trait Tables {
   }
   /** Collection-like TableQuery object for table Users */
   lazy val Users = new TableQuery(tag => new Users(tag))
+
+  /** Entity class storing rows of table Usertags
+   *  @param userid Database column userid SqlType(int4), Default(None)
+   *  @param tagid Database column tagid SqlType(int4), Default(None) */
+  case class UsertagsRow(userid: Option[Int] = None, tagid: Option[Int] = None)
+  /** GetResult implicit for fetching UsertagsRow objects using plain SQL queries */
+  implicit def GetResultUsertagsRow(implicit e0: GR[Option[Int]]): GR[UsertagsRow] = GR{
+    prs => import prs._
+    UsertagsRow.tupled((<<?[Int], <<?[Int]))
+  }
+  /** Table description of table usertags. Objects of this class serve as prototypes for rows in queries. */
+  class Usertags(_tableTag: Tag) extends profile.api.Table[UsertagsRow](_tableTag, "usertags") {
+    def * = (userid, tagid) <> (UsertagsRow.tupled, UsertagsRow.unapply)
+
+    /** Database column userid SqlType(int4), Default(None) */
+    val userid: Rep[Option[Int]] = column[Option[Int]]("userid", O.Default(None))
+    /** Database column tagid SqlType(int4), Default(None) */
+    val tagid: Rep[Option[Int]] = column[Option[Int]]("tagid", O.Default(None))
+
+    /** Foreign key referencing Tags (database name usertags_tagid_fkey) */
+    lazy val tagsFk = foreignKey("usertags_tagid_fkey", tagid, Tags)(r => Rep.Some(r.id), onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.Cascade)
+    /** Foreign key referencing Users (database name usertags_userid_fkey) */
+    lazy val usersFk = foreignKey("usertags_userid_fkey", userid, Users)(r => Rep.Some(r.id), onUpdate=ForeignKeyAction.NoAction, onDelete=ForeignKeyAction.Cascade)
+  }
+  /** Collection-like TableQuery object for table Usertags */
+  lazy val Usertags = new TableQuery(tag => new Usertags(tag))
 }

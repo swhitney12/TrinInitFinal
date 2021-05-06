@@ -18,6 +18,7 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
 
   private val userModel = new UsersModel(db)
+  private val tagModel = new TagsModel(db)
   
   def trininitIndex = Action { implicit request =>
     Ok(views.html.trininit())
