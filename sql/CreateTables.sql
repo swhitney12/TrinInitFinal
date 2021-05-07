@@ -21,10 +21,14 @@ CREATE TABLE projects (
   id SERIAL PRIMARY KEY,
   ownerId int REFERENCES users(id) ON DELETE CASCADE,
   name varchar(20) NOT NULL,
-  likes int NOT NULL,
   description varchar(2000) NOT NULL,
   repositoryLink varchar(100),
   creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE projectLikes (
+  userId int REFERENCES users(id) ON DELETE CASCADE,
+  projectId int REFERENCES projects(id) ON DELETE CASCADE
 );
 
 CREATE TABLE userProjects(
@@ -42,5 +46,5 @@ CREATE TABLE projectComments (
   projectId int REFERENCES projects(id) ON DELETE CASCADE,
   userId int REFERENCES users(id) ON DELETE CASCADE,
   creationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  comment varchar(2000) NOT NULL,
+  comment varchar(2000) NOT NULL
 );

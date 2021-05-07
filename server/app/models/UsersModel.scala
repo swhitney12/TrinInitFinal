@@ -72,4 +72,4 @@ class UsersModel(db: Database)(implicit ec: ExecutionContext) {
 }
 
 case class UserData(username: String, password: String, major: String,
-                    graduationYear: Int, githubLink: Option[String])
+  graduationYear: Int, githubLink: Option[String])
