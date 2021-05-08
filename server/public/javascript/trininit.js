@@ -10,7 +10,7 @@ class TrininitReactComponent extends React.Component {
     
     render () {
         // return ce(LoginComponent)
-        return ce(ProfileComponent)
+        return ce(MainComponent)
     }
 }
 
@@ -116,6 +116,8 @@ class ProfileComponent extends React.Component {
                     ce('div', {id: 'myProjectSecTitleDiv'},
                         ce('h2', {id: 'myProjectSecTitle'}, 'My Projects')
                     ),
+
+                    ce('hr'),
 
                     ce('div', {id: 'myProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
