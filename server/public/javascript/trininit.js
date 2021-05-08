@@ -10,7 +10,7 @@ class TrininitReactComponent extends React.Component {
     
     render () {
         // return ce(LoginComponent)
-        return ce(MainComponent)
+        return ce(ProjectViewComponent)
     }
 }
 
@@ -268,7 +268,7 @@ class CreateProjectComponent extends React.Component {
                     ce('h1', {className: 'createProjSecTitle'}, 'New Project')
                 ),
 
-                ce('hr'),
+                ce('hr', {id: 'createProjLine'}),
 
                 ce('div', {id: 'newProjectTitlePromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'}, 'Project Title'),
@@ -365,13 +365,13 @@ class ProjectViewComponent extends React.Component {
                     ce('h2', {id: 'commentInputHeader'}, 'Leave a Comment'),
 
                     ce('div', {id: 'commentInputDiv'},
-                        ce('textarea', {id: 'commentInput', rows: '3', cols: '100', placeholder: 'Type Your Comment...'}),
+                        ce('textarea', {id: 'commentInput', rows: '2', cols: '100', placeholder: 'Type Your Comment...'}),
                         ce('button', {id: 'commentSendBtn'}, 
                             ce('i', {className: 'fas fa-paper-plane'})
                         )
                     ),
 
-                    ce('hr'),
+                    ce('hr', {id: 'commentHr'}),
                     ce('h2', {id: 'commentSecHeader'}, 'Comments'),
 
                     ce('div', {className: 'commentCardDiv'}, 
