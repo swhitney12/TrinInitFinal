@@ -1,0 +1,1 @@
+CREATE DATABASE TrinInit WITH OWNER=emersonspradling;
