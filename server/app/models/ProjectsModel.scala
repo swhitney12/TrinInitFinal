@@ -21,6 +21,21 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
     ))
   }
 
+
+  /**
+    * Creates a project given the project's data
+    *
+    * @param project
+    * @return the ID for the new project
+    */
+  def createProject(project: ProjectData): Future[Int] = {
+    db.run(Projects += ProjectsRow(-1, project.ownerId, project.name, project.description,
+      project.repositoryLink, project.creationDate))
+  }
+
+  // getPersonalProject(userId)
+  // getAllProject
+
   /**
     * Adds 1 like to a project
     *
