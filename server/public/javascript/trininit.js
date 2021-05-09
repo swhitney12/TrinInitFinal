@@ -60,7 +60,9 @@ class ProfileComponent extends React.Component {
             Major:"Computer Science",
             GradYear:"2021",
             GitHubLink:"https://github.com/swhitney12",
-            MyProjects:["e"]
+            MyProjects:["e", "e"],
+            Myinterests: "Frontend dev, data, visualization, sports, cybersecurity",
+            MySkills: "Java, C/C++, React, Javascript, HTML, CSS"
         };
     }
 
@@ -127,19 +129,21 @@ class ProfileComponent extends React.Component {
 
                     ce('div', {id: 'myProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
-                        // this.state.MyProjects.forEach()
-
-                        ce('div', {className: 'ProjListing'},
-                            ce('div', {className: 'ProjListingTitleDiv'},
-                                ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
-                                ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username),
-                            ),
-                            ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
-                            ce('div', {className: 'ProjListingEngagementDiv'},
-                                ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
-                                ce('vl'),
-                                ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
-                            )
+                        this.state.MyProjects.map((project, index) =>
+                            {
+                                return ce('div', {className: 'ProjListing'},
+                                    ce('div', {className: 'ProjListingTitleDiv'},
+                                        ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'), //replace w/ fed in project info
+                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username),
+                                    ),
+                                    ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
+                                    ce('div', {className: 'ProjListingEngagementDiv'},
+                                        ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                                        ce('vl'),
+                                        ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                                    )
+                                )
+                            }
                         )
                     )
                 ),
@@ -147,12 +151,12 @@ class ProfileComponent extends React.Component {
                 ce('div', {id: 'rightProfileDiv'},
                     ce('div', {id: 'profileInterestsDiv'},
                         ce('h3', {className:'profileMainSubheader3'}, 'Interests'),
-                        ce('h4', {className:'profileMainSubheader2'}, 'Frontend dev, data, visualization, sports, cybersecurity')
+                        ce('h4', {className:'profileMainSubheader2'}, this.state.Myinterests)
                     ),
 
                     ce('div', {id: 'profileSkillsDiv'},
                         ce('h3', {className:'profileMainSubheader3'}, 'Skills'),
-                        ce('h4', {className:'profileMainSubheader2'}, 'Java, C/C++, React, Javascript, HTML, CSS')
+                        ce('h4', {className:'profileMainSubheader2'}, this.state.MySkills)
                     )
                 )
             )
