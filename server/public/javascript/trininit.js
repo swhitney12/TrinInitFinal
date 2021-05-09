@@ -172,17 +172,26 @@ class CreateUserComponent extends React.Component {
 
 }
 
+
 class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            //add state variables here
+            //hardcoded for testing purposes
+            searchInput:"",
+            username:"SabrinaWhi",
+            Major:"Computer Science",
+            GradYear:"2021",
+            GitHubLink:"https://github.com/swhitney12",
+            MyProjects:["e"]
         };
     }
 
     render() {
         return ce('div', null, 
             ce('div', {id:'siteBanner'},
+
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('form', {id:'searchProjectsFormBanner'},
                         ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
@@ -195,7 +204,7 @@ class ProfileComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay'}, 'rainihuynh')
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -207,23 +216,23 @@ class ProfileComponent extends React.Component {
                     ),
 
                     ce('div', {id:'leftProfileInfoDiv'},
-                        ce('div', {class: 'leftProfileInfoWrapper'},
-                            ce('h3', {class:'profileMainSubheader1'}, 'Username'),
-                            ce('h4', {class:'profileMainSubheader2'}, 'rainihuynh')
+                        ce('div', {className: 'leftProfileInfoWrapper'},
+                            ce('h3', {className:'profileMainSubheader1'}, 'Username'),
+                            ce('h4', {className:'profileMainSubheader2'}, this.state.username)
                         ),
-                        ce('div', {class: 'leftProfileInfoWrapper'},
-                            ce('h3', {class:'profileMainSubheader1'}, 'Major'),
-                            ce('h4', {class:'profileMainSubheader2'}, 'Computer Science'),
-                        ),
-
-                        ce('div', {class: 'leftProfileInfoWrapper'},
-                            ce('h3', {class:'profileMainSubheader1'}, 'Graduation Year'),
-                            ce('h4', {class:'profileMainSubheader2'}, '2021'),
+                        ce('div', {className: 'leftProfileInfoWrapper'},
+                            ce('h3', {className:'profileMainSubheader1'}, 'Major'),
+                            ce('h4', {className:'profileMainSubheader2'}, this.state.Major),
                         ),
 
-                        ce('div', {class: 'leftProfileInfoWrapper'},
-                            ce('h3', {class:'profileMainSubheader1'}, 'GitHub'),
-                            ce('h4', {class:'profileMainSubheader2'}, 'rainihuynh')
+                        ce('div', {className: 'leftProfileInfoWrapper'},
+                            ce('h3', {className:'profileMainSubheader1'}, 'Graduation Year'),
+                            ce('h4', {className:'profileMainSubheader2'}, this.state.GradYear),
+                        ),
+
+                        ce('div', {className: 'leftProfileInfoWrapper'},
+                            ce('h3', {className:'profileMainSubheader1'}, 'GitHub'),
+                            ce('a', {className:'profileMainSubheader2', href: this.state.GitHubLink, target: '_blank'}, this.state.username)
                         )
                     ),
 
@@ -237,18 +246,22 @@ class ProfileComponent extends React.Component {
                         ce('h2', {id: 'myProjectSecTitle'}, 'My Projects')
                     ),
 
+                    ce('hr'),
+
                     ce('div', {id: 'myProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
-                        ce('div', {class: 'myProjListing'},
-                            ce('div', {class: 'myProjListingTitleDiv'},
-                                ce('h3', {class: 'myProjListingTitle'}, 'ProjectName'),
-                                ce('p', {class: 'myProjListingCreator'}, 'Created by rainihuynh'),
+                        // this.state.MyProjects.forEach()
+
+                        ce('div', {className: 'ProjListing'},
+                            ce('div', {className: 'ProjListingTitleDiv'},
+                                ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
+                                ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username),
                             ),
-                            ce('p', {class: 'myProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
-                            ce('div', {class: 'myProjListingEngagementDiv'},
-                                ce('p', {class: 'myProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                            ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
+                            ce('div', {className: 'ProjListingEngagementDiv'},
+                                ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
                                 ce('vl'),
-                                ce('p', {class: 'myProjListingEngagementInfo'}, '20 Comments')
+                                ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
                             )
                         )
                     )
@@ -256,18 +269,259 @@ class ProfileComponent extends React.Component {
 
                 ce('div', {id: 'rightProfileDiv'},
                     ce('div', {id: 'profileInterestsDiv'},
-                        ce('h3', {class:'profileMainSubheader3'}, 'Interests'),
-                        ce('h4', {class:'profileMainSubheader2'}, 'Frontend dev, data, visualization, sports, cybersecurity')
+                        ce('h3', {className:'profileMainSubheader3'}, 'Interests'),
+                        ce('h4', {className:'profileMainSubheader2'}, 'Frontend dev, data, visualization, sports, cybersecurity')
                     ),
 
                     ce('div', {id: 'profileSkillsDiv'},
-                        ce('h3', {class:'profileMainSubheader3'}, 'Skills'),
-                        ce('h4', {class:'profileMainSubheader2'}, 'Java, C/C++, React, Javascript, HTML, CSS')
+                        ce('h3', {className:'profileMainSubheader3'}, 'Skills'),
+                        ce('h4', {className:'profileMainSubheader2'}, 'Java, C/C++, React, Javascript, HTML, CSS')
                     )
-
                 )
             )
+        )
+    }
+}
 
+class MainComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            //hardcoded for testing purposes
+            searchInput:"",
+            username:"SabrinaWhi",
+            theProjects: ["e", "e"]
+            //add state variables here
+        };
+    }
+
+    render() {
+        return ce('div', null, 
+            ce('div', {id:'siteBanner'},
+
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
+                ce('div', {id: 'searchProjectsFormBannerDiv'},
+                    ce('form', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
+                    )
+                ),
+
+                ce('div', {id: 'toProfileDiv'},
+                    ce('div', {id: 'profileImageDivBanner'},
+                        ce('img', {id:'profileImgBanner', src: profImg}),
+                    ),
+
+                    ce('div', {id: 'usernameDisplayDivBanner'},
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
+                    )
+                ),
+            ),
+
+            ce('div', {id: 'mainBody'},
+                ce('div', {id: 'leftMainDiv'}, 
+                    ce('div', {id: 'myProjectsMainTitleDiv'},
+                        ce('div', {id:'myProjectsMainTitle'}, 
+                            ce('h3', {className: 'mainSubheader1'}, 'My Projects')
+                        ),
+
+                        ce('div', {id: 'addProjectMainBtnDiv'},
+                            ce('button', {id: 'addProjectMainBtn'}, '+')
+                        )
+                    ),
+
+                    ce('div', {id: 'myProjectsMainListDiv'},
+                        //insert code here to populate this, use below as template
+                        ce('h4', {className: 'mainSubheader2'}, 'Project 1')
+                    ),
+
+                    ce('div', {id: 'likedProjectsMainTitleDiv'},
+                        ce('h3', {className: 'mainSubheader1'}, 'Liked Projects')            
+                    ),
+
+                    ce('div', {id: 'likedProjectsMainListDiv'},
+                        //insert code here to populate this, use below as a template
+                        ce('h4', {className: 'mainSubheader2'}, 'Liked Project 1')
+                    )
+                ),
+
+                ce('div', {id: 'rightMainDiv'},
+
+                    ce('div', {id: 'ProjSecListings'},
+                        //code to insert projects here, template for what will be appended in foreach
+                        ce('div', {className: 'ProjListing'},
+                            ce('div', {className: 'ProjListingTitleDiv'},
+                                ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
+                                ce('p', {className: 'ProjListingCreator'}, 'Created by rainihuynh'),
+                            ),
+                            ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
+                            ce('div', {className: 'ProjListingEngagementDiv'},
+                                ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                                ce('vl'),
+                                ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                            )
+                        )
+                    )
+                ),
+
+            )
+        )
+    }
+}
+
+class CreateProjectComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            //hardcoded for testing purposes
+            searchInput:"",
+            username:"SabrinaWhi",
+            //add state variables here
+        };
+    }
+
+    render() {  
+        return ce('div', {id: 'createProjBGDiv'},
+            ce('div', {id:'siteBanner'},
+
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
+                ce('div', {id: 'searchProjectsFormBannerDiv'},
+                    ce('form', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
+                    )
+                ),
+
+                ce('div', {id: 'toProfileDiv'},
+                    ce('div', {id: 'profileImageDivBanner'},
+                        ce('img', {id:'profileImgBanner', src: profImg}),
+                    ),
+
+                    ce('div', {id: 'usernameDisplayDivBanner'},
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
+                    )
+                ),
+            ),
+
+            ce('div', {id: "createProjDiv"},
+                ce('div', {className: 'createProjSecTitleDiv'}, 
+                    ce('h1', {className: 'createProjSecTitle'}, 'New Project')
+                ),
+
+                ce('hr', {id: 'createProjLine'}),
+
+                ce('div', {id: 'newProjectTitlePromptDiv'},
+                    ce('h3', {className: 'newProjectPrompt'}, 'Project Title'),
+                    ce('input', {type: 'text', id: 'newProjectTitleInput', placeholder: 'Enter Your Project Name...'})
+                ),
+
+                ce('div', {id: 'newProjectDescPromptDiv'},
+                    ce('h3', {className: 'newProjectPrompt'},'Description'),
+                    ce('textarea', {id: 'newProjectDescInput', rows: '4', cols: '50', placeholder: 'Enter Your Project Description...'})
+                ),
+
+                ce('div', {id: 'newProjectCollabPromptDiv'},
+                    ce('h3', {className: 'newProjectPrompt'}, 'Invite Collaborator'),
+                    ce('textarea', {id: 'newProjectCollabInput', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...'})
+                ),
+
+                ce('button', {id: 'createNewProjectBtn'}, 'Create Project')
+            )
+        )
+    }
+}
+
+class ProjectViewComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
+            //hardcoded for testing purposes
+            searchInput:"",
+            username:"SabrinaWhi",
+            //add state variables here
+        };
+    }
+
+    render() {
+        return ce('div', null, 
+
+        
+            ce('div', {id:'siteBanner'},
+                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
+                ce('div', {id: 'searchProjectsFormBannerDiv'},
+                    ce('form', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
+                    )
+                ),
+
+                ce('div', {id: 'toProfileDiv'},
+                    ce('div', {id: 'profileImageDivBanner'},
+                        ce('img', {id:'profileImgBanner', src: profImg}),
+                    ),
+
+                    ce('div', {id: 'usernameDisplayDivBanner'},
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
+                    )
+                ),
+            ),
+
+            ce('div', {id: 'projectViewDiv'},
+                ce('div', {id: 'projectViewTitleDiv'},
+                    ce('h1', {id: 'projectViewTitle'}, 'Project Title')
+                ),
+
+                ce('div', {id: 'projectViewUserInfoDiv'},
+                    ce('div', {id: 'projectViewUserImgDiv'},
+                        ce('img', {id:'projectViewUserImg', src: profImg}),
+                    ),
+
+                    ce('div', {id: 'projectViewUserNameDiv'},
+                        ce('h2', {id: 'projectViewUserName'}, 'rainihuynh'),
+                    )
+                ),
+
+                ce('div', {id: 'projectUserInteractionDiv'},
+
+                    ce('div', {id: 'projectInterestBtnDiv'},
+                        ce('button', {id: 'projectInterestBtn'},
+                            ce('i', {className: "far fa-eye"})
+                        )
+                    ),
+
+                    ce('div', {id: 'projectLikeBtnDiv'},
+                        ce('button', {id: 'projectViewLikeBtn'},
+                            ce('i', {className: "far fa-heart"})
+                        )
+                    )
+                ),
+
+                ce('div', {id: 'projectViewDescDiv'},
+                    ce('p', {id: 'projectViewDesc'}, 'Duis non commodo tortor. Proin diam odio, aliquet sed tellus quis, maximus accumsan dolor. Donec egestas malesuada nibh, quis dignissim diam dictum non. Duis eleifend tristique congue. Maecenas in pharetra velit. Phasellus ac odio eget mi pharetra mattis. Suspendisse consectetur dapibus nunc et rhoncus. Vivamus pellentesque mattis lorem, in fringilla arcu placerat non. Fusce ac lectus velit.')
+                ),
+
+                ce('div', {id: 'projectViewCollabDiv'},
+                    ce('h2', {id: 'collaboratorPrompt'}, 'Collaborators'),
+                    ce('p', {className: 'collaboratorName'}, 'Collaborator Name')
+                ),
+
+                ce('div', {id: 'projectViewCommentDiv'},
+                    ce('h2', {id: 'commentInputHeader'}, 'Leave a Comment'),
+
+                    ce('div', {id: 'commentInputDiv'},
+                        ce('textarea', {id: 'commentInput', rows: '2', cols: '100', placeholder: 'Type Your Comment...'}),
+                        ce('button', {id: 'commentSendBtn'}, 
+                            ce('i', {className: 'fas fa-paper-plane'})
+                        )
+                    ),
+
+                    ce('hr', {id: 'commentHr'}),
+                    ce('h2', {id: 'commentSecHeader'}, 'Comments'),
+
+                    ce('div', {className: 'commentCardDiv'}, 
+                        ce('h3', {className: 'commentSender'}, 'Sender Username'),
+                        ce('p', {className: 'commentContent'}, 'Here is the content of a comment'),
+                        ce('p', {className: 'sendTime'}, 'about 2 hours ago')
+                    )
+                )
+            )
         )
     }
 }
