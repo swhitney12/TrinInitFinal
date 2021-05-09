@@ -55,6 +55,7 @@ class ProfileComponent extends React.Component {
         super(props);
         this.state={
             //hardcoded for testing purposes
+            searchInput:"",
             username:"SabrinaWhi",
             Major:"Computer Science",
             GradYear:"2021",
@@ -163,6 +164,10 @@ class MainComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
+            //hardcoded for testing purposes
+            searchInput:"",
+            username:"SabrinaWhi",
+            theProjects: ["e", "e"]
             //add state variables here
         };
     }
@@ -184,7 +189,7 @@ class MainComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay'}, 'rainihuynh')
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -244,6 +249,9 @@ class CreateProjectComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
+            //hardcoded for testing purposes
+            searchInput:"",
+            username:"SabrinaWhi",
             //add state variables here
         };
     }
@@ -265,7 +273,7 @@ class CreateProjectComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay'}, 'rainihuynh')
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -302,6 +310,9 @@ class ProjectViewComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
+            //hardcoded for testing purposes
+            searchInput:"",
+            username:"SabrinaWhi",
             //add state variables here
         };
     }
@@ -324,7 +335,7 @@ class ProjectViewComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay'}, 'rainihuynh')
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
