@@ -10,7 +10,7 @@ class TrininitReactComponent extends React.Component {
     
     render () {
         // return ce(LoginComponent)
-        return ce(ProjectViewComponent)
+        return ce(ProfileComponent)
     }
 }
 
@@ -54,7 +54,12 @@ class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            //add state variables here
+            //hardcoded for testing purposes
+            username:"SabrinaWhi",
+            Major:"Computer Science",
+            GradYear:"2021",
+            GitHubLink:"https://github.com/swhitney12",
+            MyProjects:["e"]
         };
     }
 
@@ -75,7 +80,7 @@ class ProfileComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay'}, 'rainihuynh')
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -89,21 +94,21 @@ class ProfileComponent extends React.Component {
                     ce('div', {id:'leftProfileInfoDiv'},
                         ce('div', {className: 'leftProfileInfoWrapper'},
                             ce('h3', {className:'profileMainSubheader1'}, 'Username'),
-                            ce('h4', {className:'profileMainSubheader2'}, 'rainihuynh')
+                            ce('h4', {className:'profileMainSubheader2'}, this.state.username)
                         ),
                         ce('div', {className: 'leftProfileInfoWrapper'},
                             ce('h3', {className:'profileMainSubheader1'}, 'Major'),
-                            ce('h4', {className:'profileMainSubheader2'}, 'Computer Science'),
+                            ce('h4', {className:'profileMainSubheader2'}, this.state.Major),
                         ),
 
                         ce('div', {className: 'leftProfileInfoWrapper'},
                             ce('h3', {className:'profileMainSubheader1'}, 'Graduation Year'),
-                            ce('h4', {className:'profileMainSubheader2'}, '2021'),
+                            ce('h4', {className:'profileMainSubheader2'}, this.state.GradYear),
                         ),
 
                         ce('div', {className: 'leftProfileInfoWrapper'},
                             ce('h3', {className:'profileMainSubheader1'}, 'GitHub'),
-                            ce('h4', {className:'profileMainSubheader2'}, 'rainihuynh')
+                            ce('a', {className:'profileMainSubheader2', href: this.state.GitHubLink, target: '_blank'}, this.state.username)
                         )
                     ),
 
@@ -121,10 +126,12 @@ class ProfileComponent extends React.Component {
 
                     ce('div', {id: 'myProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
+                        // this.state.MyProjects.forEach()
+
                         ce('div', {className: 'ProjListing'},
                             ce('div', {className: 'ProjListingTitleDiv'},
                                 ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
-                                ce('p', {className: 'ProjListingCreator'}, 'Created by rainihuynh'),
+                                ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username),
                             ),
                             ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
                             ce('div', {className: 'ProjListingEngagementDiv'},
