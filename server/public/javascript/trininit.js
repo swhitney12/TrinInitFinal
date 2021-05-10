@@ -105,7 +105,10 @@ class CreateUserComponent extends React.Component {
         this.state={
             createUserName:"", 
             createUserPass:"",
+            createUserMajor:"", 
+            createUserGradYear:"",
             createMessage: "",
+            createUserGithubLink: "",
             inLoginState: false, 
 
         };
@@ -128,6 +131,12 @@ class CreateUserComponent extends React.Component {
                         ce('input', {type:'text', class:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
                         ce('br'),
                         ce('input', {type:'text', class:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
+                        ce('br'),
+                        ce('input', {type:'text', class:'createUserMajor', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
+                        ce('br'),
+                        ce('input', {type:'int', class:'createUserGradYear', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
+                        ce('br'),
+                        ce('input', {type:'text', class:'createUserGithubLink', id:'createUserGithubLink', placeholder:'github lunk', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
                         ce('br'),
                         ce('button', {onClick: e => this.createUser(e)}, 'Create User'),
                     )
