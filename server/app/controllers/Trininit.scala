@@ -20,15 +20,23 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
 
   private val userModel = new UsersModel(db)
   private val tagModel = new TagsModel(db)
+
+
   
-  implicit val userDataWrites = Json.writes[models.UserData]
-  implicit val userDataReads = Json.reads[models.UserData]
+  implicit val userDataWrites = Json.writes[UserData]
+  implicit val userDataReads = Json.reads[UserData]
 
   def withJsonBody[A](f: A => Future[Result])(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
     request.body.asJson.map { body =>
       Json.fromJson[A](body) match {
-        case JsSuccess(a, path) => f(a)
-        case e @ JsError(_) => Future.successful(Redirect(routes.Trininit.trininitIndex()))
+        case JsSuccess(a, path) =>  { 
+          println("success")
+          f(a) 
+        }
+        case e @ JsError(_) =>  {
+          println(body) 
+          Future.successful(Redirect(routes.Trininit.trininitIndex()))
+        }
       }
     }.getOrElse(Future.successful(Redirect(routes.Trininit.trininitIndex())))
   }
@@ -46,15 +54,21 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   }
 
   def createUser = Action.async { implicit request =>
-        withJsonBody[UserData] { ud => userModel.createUser(UserData(ud.username, ud.password, ud.major, ud.graduationYear, ud.githubLink)).map { ouserId =>   
-      ouserId match {
-        case Some(userid) =>
-          Ok(Json.toJson(true))
-            .withSession("username" -> ud.username, "userid" -> userid.toString, "csrfToken" -> play.filters.csrf.CSRF.getToken.map(_.value).getOrElse(""))
-        case None =>
-          Ok(Json.toJson(false))
+        withJsonBody[UserData] { ud => {
+          userModel.createUser(ud).map { ouserId =>  Ok(Json.toJson(ouserId)) 
+          } 
+        }
       }
-    } }
+
+    //           withJsonBody[UserData] { ud => userModel.createUser(ud).map { ouserId =>   
+    //   ouserId match {
+    //     case Some(userid) =>
+    //       Ok(Json.toJson(true))
+    //         .withSession("username" -> ud.username, "userid" -> userid.toString, "csrfToken" -> play.filters.csrf.CSRF.getToken.map(_.value).getOrElse(""))
+    //     case None =>
+    //       Ok(Json.toJson(false))
+    //   }
+    // } }
   }
 
   // def getUserData = Action.async { implicit request =>

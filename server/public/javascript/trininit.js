@@ -148,11 +148,11 @@ class CreateUserComponent extends React.Component {
                     ce('div', {id:'loginForm'},
                          ce('input', {type:'text', className:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'text', className:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'password', className:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
                          ce('br'),
                          ce('input', {type:'text', className:'createUserMajor', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'text', className:'createUserGradYear', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'number', className:'createUserGradYear', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
                          ce('br'),
                          ce('input', {type:'text', className:'createUserGithubLink', id:'createUserGithubLink', placeholder:'github lunk', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
                          ce('br'),
@@ -176,19 +176,16 @@ class CreateUserComponent extends React.Component {
         const username = this.state.createUserName;
         const password = this.state.createUserPass;
         const major = this.state.createUserMajor;
-        const gradYear = this.state.createUserGradYear;
+        const graduationYear = this.state.createUserGradYear;
         const githubLink = this.state.createUserGithubLink;
+
         fetch(createRoute, { 
           method: 'POST',
           headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
-          body: JSON.stringify({ username, password, major, gradYear, githubLink})
-          //username, password, major, gradYear, githubLink
-        }).then(res => res.text()).then(data => {
+          body: JSON.stringify({username, password, major, graduationYear, githubLink})
+        }).then(res => res.json()).then(data => {
           if(data) {
             console.log("working")
-             //this.props.toLogin()
-            // // this.setState()
-             
           } else {
               console.log("uhoh")
             //this.setState({ createMessage: "User Creation Failed"});
