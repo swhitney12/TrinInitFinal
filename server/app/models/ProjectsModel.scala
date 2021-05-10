@@ -60,6 +60,18 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
     db.run(Projectlikes += ProjectlikesRow(Some(userId), Some(projectId)))
   }
 
+
+  /**
+    * Adds a user as a collaborator to a project
+    *
+    * @param projectId
+    * @param userId
+    * @return greater than 0 if add is successful
+    */
+  def addCollaborator(projectId: Int, userId: Int): Future[Int] = {
+    db.run(Userprojects += UserprojectsRow(Some(userId), Some(projectId)))
+  }
+
   /**
     * Counts the likes for a project given its ID
     *
