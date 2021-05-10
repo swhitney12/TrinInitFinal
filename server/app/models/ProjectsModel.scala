@@ -4,6 +4,7 @@ import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.ExecutionContext
 import models.Tables._
 import scala.concurrent.Future
+import javax.xml.stream.events.Comment
 
 class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
   
@@ -119,7 +120,34 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
       )
     ))).map(pr => pr.flatten))
   }
+
+  /**
+    * Adds a comment to a project
+    *
+    * @param comment
+    * @return greater than 0 if successful
+    */
+  def addComment(comment: CommentData): Future[Int] = {
+    db.run(Projectcomments += ProjectcommentsRow(-1, comment.projectId, comment.userId,
+      comment.creationDate, comment.comment))
+  }
+
+  /**
+    * Gets all comments associated with a project
+    *
+    * @param projectId
+    * @return a sequence of comment data
+    */
+  def getComments(projectId: Int): Future[Seq[CommentData]] = {
+    db.run(Projectcomments.filter(_.projectid === projectId).result).map(_.map(cr => 
+      CommentData(cr.id, cr.projectid, cr.userid, cr.creationdate, cr.comment)
+    ))
+  }
+
 }
 
 case class ProjectData(id: Int, ownerId: Option[Int], name: String, description: String, 
   repositoryLink: Option[String], creationDate: Option[java.sql.Timestamp])
+
+case class CommentData(id: Int, projectId: Option[Int], userId: Option[Int], 
+  creationDate: Option[java.sql.Timestamp], comment: String)
