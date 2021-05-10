@@ -9,23 +9,7 @@ const csrfToken = document.getElementById("csrfToken").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
 
 
-
 class TrininitReactComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state={
-         
-        }
-    }
-    
-    render () {
-        
-            return ce(LoginComponent)
-        //
-    }
-}
-
-class LoginComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
@@ -96,9 +80,6 @@ class LoginComponent extends React.Component {
 
         }
 
-            
-        
-        
         /*
         fetch(validateRoute, { 
           method: 'POST',
@@ -117,8 +98,7 @@ class LoginComponent extends React.Component {
           }
         });
         */
-      }
-
+    }
 }
 
 class CreateUserComponent extends React.Component {
@@ -171,6 +151,7 @@ class CreateUserComponent extends React.Component {
     }
 
 }
+
 
 
 class ProfileComponent extends React.Component {
