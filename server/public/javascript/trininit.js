@@ -1,37 +1,16 @@
 const ce = React.createElement
 const profImg = document.getElementById("defaultimg").value;
-const csrfToken = document.getElementById("csrfToken").value;
-//const validateRoute = document.getElementById("validateRoute").value;
-//const tasksRoute = document.getElementById("tasksRoute").value;
-//const createRoute = document.getElementById("createRoute").value;
-//const deleteRoute = document.getElementById("deleteRoute").value;
-//const addRoute = document.getElementById("addRoute").value;
-//const logoutRoute = document.getElementById("logoutRoute").value;
 
 
 
 class TrininitReactComponent extends React.Component {
     constructor(props) {
         super(props);
-        this.state={
-            onProfile: false,
-            loggedIn: true
-         
-        }
     }
     
     render () {
         // return ce(LoginComponent)
-        if(this.state.onProfile == true) {
-            return ce(ProfileComponent)
-        } else if (this.state.loggedIn == true) {
-            return ce(MainComponent)
-        } else if (this.state.loggedIn == false) {
-            return ce(LoginComponent)
-        }
-        
-            return ce(LoginComponent)
-        //
+        return ce(ProfileComponent)
     }
 }
 
@@ -44,23 +23,11 @@ class LoginComponent extends React.Component {
             createUserName:"", 
             createUserPass:"",
             loginMessage: "",
-            createMessage: "",
-            inProfileState: false, 
-            inCreateUserState: false
-            
-        
+            createMessage: ""
         };
     }
 
     render() {
-
-        if(this.state.inProfileState === true){
-            return ce(ProfileComponent)
-        }
-        if(this.state.inCreateUserState === true){
-            return ce(CreateUserComponent)
-        }
-
         return ce('div', null, 
             ce('div', {id:'loginAreaDiv'},
                 ce('div', {id:'loginImage'},
@@ -70,116 +37,16 @@ class LoginComponent extends React.Component {
                 ce('div', {id:'loginFormDiv'},
                     ce('p', {id:'loginText'}, 'Welcome'),
                     ce('form', {id:'loginForm'},
-                        ce('input', {type:'text', class:'loginTextInput', id:'loginUsername', placeholder:'username', value: this.state.loginUsername, onChange: e => this.changeHandler(e)}),
+                        ce('input', {type:'text', className:'loginTextInput', id:'usernameInput', placeholder:'username'}),
                         ce('br'),
-                        ce('input', {type:'password', class:'loginTextInput', id:'loginPassword', placeholder:'password', value: this.state.loginPassword, onChange: e => this.changeHandler(e)}),
+                        ce('input', {type:'password', className:'loginTextInput', id:'passwordInput', placeholder:'password'}),
                         ce('br'),
-                        ce('button', {onClick: e => this.login(e)}, 'Login'),
-                        ce('br'),
-                        ce('br'),
-                        //ce('span', {id: "loginMessage"}, this.state.loginMessage)
-                        ce('button', {onClick: e => this.sendToCU(e)}, 'Create a New User')
+                        ce('input', {type:'submit', id:'loginSubmit', value:'Login'})
                     )
                 )
             )
         )
-    
-    
-    
     }
-
-    changeHandler(e) {
-        this.setState({[e.target['id']]: e.target.value });
-    }
-
-    sendToCU(e){
-        this.setState({inCreateUserState: true})
-    }
-
-    login(e) {
-        const username = this.state.loginUsername;
-        const password = this.state.loginPassword;
-
-        if(username=="batman" && password == "gotham") {
-            console.log("correct");
-            this.setState({inProfileState: true})
-
-        }
-
-            
-        
-        
-        /*
-        fetch(validateRoute, { 
-          method: 'POST',
-          headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
-          body: JSON.stringify({ username, password })
-        }).then(res => res.json()).then(data => {
-          if(data) {
-            //this.props.doLogin();
-            // document.getElementById("login-section").hidden = true;
-            // document.getElementById("task-section").hidden = false;
-            // document.getElementById("login-message").innerHTML = "";
-            // document.getElementById("create-message").innerHTML = "";
-            // loadTasks();
-          } else {
-            this.setState({ loginMessage: "Login Failed" });
-          }
-        });
-        */
-      }
-
-}
-
-class CreateUserComponent extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state={
-            createUserName:"", 
-            createUserPass:"",
-            createMessage: "",
-            inLoginState: false, 
-
-        };
-    }
-
-    render() {
-
-        if(this.state.inLoginState === true){
-            return ce(LoginComponent)
-        }
-
-        return ce('div', null, 
-            ce('div', {id:'loginAreaDiv'},
-                ce('div', {id:'loginImage'},
-                    ce('h2', {id:'loginImageText'}, 'Create User'),
-                ),
-                ce('div', {id:'loginFormDiv'},
-                ce('p', {id:'loginText'}, 'Create Your User'),
-                    ce('form', {id:'loginForm'},
-                        ce('input', {type:'text', class:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
-                        ce('br'),
-                        ce('input', {type:'text', class:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
-                        ce('br'),
-                        ce('button', {onClick: e => this.createUser(e)}, 'Create User'),
-                    )
-                )
-            )
-        )
-    
-    
-    
-    }
-
-    changeHandler(e) {
-        this.setState({[e.target['id']]: e.target.value });
-    }
-
-    createUser(e) {
-        this.setState({inLoginState: true})
-
-    }
-
 }
 
 
