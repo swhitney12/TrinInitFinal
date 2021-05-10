@@ -15,20 +15,12 @@ import scala.concurrent.Future
 import play.api.libs.json._
 import models.ImplicitJsonConversions._
 
-
-
 @Singleton
 class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit ec: ExecutionContext) 
     extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
 
   private val userModel = new UsersModel(db)
   private val tagModel = new TagsModel(db)
-
-
-  
-  implicit val userDataWrites = Json.writes[UserData]
-  implicit val userDataReads = Json.reads[UserData]
-
   private val projectsModel = new ProjectsModel(db)
   
   def withJsonBody[A](f: A => Future[Result])(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
