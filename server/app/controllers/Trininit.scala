@@ -35,12 +35,9 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     request.body.asJson.map { body =>
       Json.fromJson[A](body) match {
         case JsSuccess(a, path) =>  { 
-          println("success")
           f(a) 
         }
         case e @ JsError(_) =>  {
-          println(e)
-          println(body) 
           Future.successful(Redirect(routes.Trininit.trininitIndex()))
         }
       }
@@ -59,6 +56,21 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     Ok(views.html.trininit())
   }
 
+   def validateUser = Action.async { implicit request =>
+        withJsonBody[UserData] { ud => {
+          userModel.validateUser(ud.username, ud.password).map { ouserId =>       
+            ouserId match {
+              case Some(userid) =>
+                Ok(Json.toJson(ouserId)).withSession("username" -> ud.username, "userid" -> userid.toString, "csrfToken" -> play.filters.csrf.CSRF.getToken.map(_.value).getOrElse("")) 
+              case None => 
+                Ok(Json.toJson(false))
+            }
+          } 
+        }
+    }
+  }
+
+
   def createUser = Action.async { implicit request =>
         withJsonBody[UserData] { ud => {
           userModel.createUser(ud).map { ouserId =>  Ok(Json.toJson(ouserId)) 
@@ -69,12 +81,10 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
 
   //get username w/ json
   def getUserData = Action.async { implicit request =>
-    println("getting data")
-
-    userModel.getUserData("swibi").map(info => {
-      println(info)
-      Ok(Json.toJson(info))
-      })
+    withSessionUsername(username => {
+      println("getting user data")
+      userModel.getUserData(username).map(data => Ok(Json.toJson(data)))
+    })
   }
   
 

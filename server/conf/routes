@@ -10,3 +10,4 @@ GET        /versionedAssets/*file        controllers.Assets.versioned(path="/pub
 GET        /                         controllers.Trininit.trininitIndex
 GET        /getUserData              controllers.Trininit.getUserData
 POST       /createUser               controllers.Trininit.createUser
+POST       /validateUser               controllers.Trininit.validateUser
