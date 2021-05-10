@@ -45,19 +45,19 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
   }
   
   /**
-    * Gets all ssociated project that a user is a collaborator on
+    * Gets all associated project that a user is a collaborator on
     *
     * @param userId
-    * @return all associated projects if they exist in database, if not their is a none
+    * @return a Sequence of Project data
     */
-  def getCollaboratorProjects(userId: Int): Future[Seq[Option[ProjectData]]] = {
+  def getCollaboratorProjects(userId: Int): Future[Seq[ProjectData]] = {
     val collabProjects = db.run(Userprojects.filter(_.userid === userId).result)
 
     collabProjects.flatMap( projects => Future.sequence(projects.map(row => 
       db.run(Projects.filter(_.id === row.projectid).result).map(_.headOption.map(proj => 
         ProjectData(proj.id, proj.ownerid, proj.name, proj.description, proj.repositorylink, proj.creationdate)
       )
-    ))))
+    ))).map(ps => ps.flatten))
   }
 
   /**
@@ -102,6 +102,22 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
   def getLikeCount(projectId: Int): Future[Int] = {
     val matches = db.run(Projectlikes.filter(row => row.projectid === projectId).result)
     matches.map(_.length)
+  }
+
+  /**
+    * Gets all projects liked by a user
+    *
+    * @param userId
+    * @return a Sequence of project data
+    */
+  def getLikedProjects(userId: Int): Future[Seq[ProjectData]] = {
+    val matches = db.run(Projectlikes.filter(_.userid === userId).result)
+
+    matches.flatMap(projects => Future.sequence(projects.map(pr => 
+      db.run(Projects.filter(_.id === pr.projectid).result).map(_.headOption.map(p => 
+        ProjectData(p.id, p.ownerid, p.name, p.description, p.repositorylink, p.creationdate)
+      )
+    ))).map(pr => pr.flatten))
   }
 }
 
