@@ -13,6 +13,20 @@ class TrininitReactComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
+
+        };
+    }
+
+    render() {
+        return ce(LoginComponent)
+    }
+
+}
+
+class LoginComponent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state={
             loginUsername: "", 
             loginPassword:"", 
             createUserName:"", 
@@ -20,7 +34,7 @@ class TrininitReactComponent extends React.Component {
             loginMessage: "",
             createMessage: "",
             inProfileState: false, 
-            inCreateUserState: false
+            inCreateUserState: true
         };
     }
 
