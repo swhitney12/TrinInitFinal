@@ -13,6 +13,7 @@ import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.Future
 import play.api.libs.json._
+import models.ImplicitJsonConversions._
 
 @Singleton
 class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit ec: ExecutionContext) 
@@ -26,6 +27,8 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   implicit val userDataWrites = Json.writes[UserData]
   implicit val userDataReads = Json.reads[UserData]
 
+  private val projectsModel = new ProjectsModel(db)
+  
   def withJsonBody[A](f: A => Future[Result])(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
     request.body.asJson.map { body =>
       Json.fromJson[A](body) match {
