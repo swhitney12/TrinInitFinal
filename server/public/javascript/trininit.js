@@ -3,7 +3,7 @@ const profImg = document.getElementById("defaultimg").value;
 const csrfToken = document.getElementById("csrfToken").value;
 //const validateRoute = document.getElementById("validateRoute").value;
 //const tasksRoute = document.getElementById("tasksRoute").value;
-//const createRoute = document.getElementById("createRoute").value;
+const createRoute = document.getElementById("createRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
@@ -13,12 +13,27 @@ class TrininitReactComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-
+            inProfileState: false, 
+            inCreateUserState: false,
+            inLoginState: true
         };
     }
 
     render() {
-        return ce(LoginComponent)
+        
+        if(this.state.inLoginState) {
+            return ce(LoginComponent, {doLogin: () => this.setState({inProfileState: true, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inCreateUserState: true, inProfileState: false, inLoginState: false})})
+        }
+        if(this.state.inProfileState){
+            return ce(ProfileComponent)
+        }
+        if(this.state.inCreateUserState){
+            return ce(CreateUserComponent, {toLogin: () => {
+                console.log("calling login")
+                this.setState({inProfileState: true, inCreateUserState: false, inLoginState: false})
+                // this.setState({inProfileState: false, inCreateUserState: false})
+            }})
+        }
     }
 
 }
@@ -33,19 +48,10 @@ class LoginComponent extends React.Component {
             createUserPass:"",
             loginMessage: "",
             createMessage: "",
-            inProfileState: false, 
-            inCreateUserState: true
         };
     }
 
     render() {
-
-        if(this.state.inProfileState === true){
-            return ce(ProfileComponent)
-        }
-        if(this.state.inCreateUserState === true){
-            return ce(CreateUserComponent)
-        }
 
         return ce('div', null, 
             ce('div', {id:'loginAreaDiv'},
@@ -64,7 +70,7 @@ class LoginComponent extends React.Component {
                         ce('br'),
                         ce('br'),
                         //ce('span', {id: "loginMessage"}, this.state.loginMessage)
-                        ce('button', {onClick: e => this.sendToCU(e)}, 'Create a New User')
+                        ce('button', {onClick: e => this.props.sendToCU(e)}, 'Create a New User')
                     )
                 )
             )
@@ -76,10 +82,6 @@ class LoginComponent extends React.Component {
 
     changeHandler(e) {
         this.setState({[e.target['id']]: e.target.value });
-    }
-
-    sendToCU(e){
-        this.setState({inCreateUserState: true})
     }
 
     login(e) {
@@ -123,16 +125,16 @@ class CreateUserComponent extends React.Component {
             createUserGradYear:"",
             createMessage: "",
             createUserGithubLink: "",
-            inLoginState: false, 
+            // inLoginState: false, 
 
         };
     }
 
     render() {
 
-        if(this.state.inLoginState === true){
-            return ce(LoginComponent)
-        }
+        // if(this.state.inLoginState === true){
+        //     return ce(LoginComponent)
+        // }
 
         return ce('div', null, 
             ce('div', {id:'loginAreaDiv'},
@@ -142,17 +144,18 @@ class CreateUserComponent extends React.Component {
                 ce('div', {id:'loginFormDiv'},
                 ce('p', {id:'loginText'}, 'Create Your User'),
                     ce('form', {id:'loginForm'},
-                        ce('input', {type:'text', class:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
+                        ce('input', {type:'text', className:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
                         ce('br'),
-                        ce('input', {type:'text', class:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
+                        ce('input', {type:'text', className:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
                         ce('br'),
-                        ce('input', {type:'text', class:'createUserMajor', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
+                        ce('input', {type:'text', className:'createUserMajor', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
                         ce('br'),
-                        ce('input', {type:'int', class:'createUserGradYear', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
+                        ce('input', {type:'int', className:'createUserGradYear', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
                         ce('br'),
-                        ce('input', {type:'text', class:'createUserGithubLink', id:'createUserGithubLink', placeholder:'github lunk', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
+                        ce('input', {type:'text', className:'createUserGithubLink', id:'createUserGithubLink', placeholder:'github lunk', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
                         ce('br'),
-                        ce('button', {onClick: e => this.createUser(e)}, 'Create User'),
+                        ce('button', 'Create User'),
+                        // {onClick: e => this.createUser(e)}
                     )
                 )
             )
@@ -162,16 +165,33 @@ class CreateUserComponent extends React.Component {
     
     }
 
-    changeHandler(e) {
-        this.setState({[e.target['id']]: e.target.value });
-    }
+    // changeHandler(e) {
+    //     this.setState({[e.target['id']]: e.target.value });
+    // }
 
     createUser(e) {
-        this.setState({inLoginState: true})
-
+        const username = this.state.createUserName;
+        const password = this.state.createUserPass;
+        const major = this.state.createUserMajor;
+        const gradYear = this.state.createUserGradYear;
+        const githubLink = this.state.createUserGithubLink;
+        fetch(createRoute, { 
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+          body: JSON.stringify({ username, password, major, gradYear, githubLink})
+        }).then(res => res.json()).then(data => {
+          if(data) {
+            // this.props.toLogin()
+            // // this.setState()
+            // console.log("working")
+          } else {
+            this.setState({ createMessage: "User Creation Failed"});
+          }
+        });
     }
-
 }
+
+
 
 
 
