@@ -38,6 +38,8 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
           f(a) 
         }
         case e @ JsError(_) =>  {
+          println(e)
+          println(body)
           Future.successful(Redirect(routes.Trininit.trininitIndex()))
         }
       }
@@ -79,12 +81,24 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     }
   }
 
-  //get username w/ json
   def getUserData = Action.async { implicit request =>
     withSessionUsername(username => {
       println("getting user data")
       userModel.getUserData(username).map(data => Ok(Json.toJson(data)))
     })
+  }
+
+  def getProjectData = Action.async { implicit request =>
+    projectsModel.getProject(1).map { project =>
+      Ok(Json.toJson(project))
+    }
+  }
+
+  def likeProject = Action.async { implicit request =>
+    //change to withsessionuserid to pass into likeproject, hardcoded for now
+    withJsonBody[ProjectData] {pd =>
+      projectsModel.likeProject(pd.id, 1).map(like => Ok(Json.toJson(true)))
+    }
   }
   
 
