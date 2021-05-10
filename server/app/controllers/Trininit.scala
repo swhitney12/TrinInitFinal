@@ -22,9 +22,9 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   private val tagModel = new TagsModel(db)
   
   implicit val userDataWrites = Json.writes[models.UserData]
-  implicit val userDataReads = Json.reads[UserData]
+  implicit val userDataReads = Json.reads[models.UserData]
 
-    def withJsonBody[A](f: A => Future[Result])(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
+  def withJsonBody[A](f: A => Future[Result])(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
     request.body.asJson.map { body =>
       Json.fromJson[A](body) match {
         case JsSuccess(a, path) => f(a)
@@ -32,15 +32,29 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
       }
     }.getOrElse(Future.successful(Redirect(routes.Trininit.trininitIndex())))
   }
+
+  def withSessionUsername(f: String => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
+    request.session.get("username").map(f).getOrElse(Future.successful(Ok(Json.toJson(Seq.empty[String]))))
+  }
+
+  def withSessionUserid(f: Int => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
+    request.session.get("userid").map(userid => f(userid.toInt)).getOrElse(Future.successful(Ok(Json.toJson(Seq.empty[String]))))
+  }
   
   def trininitIndex = Action { implicit request =>
     Ok(views.html.trininit())
   }
 
-
-
   def createUser = Action.async { implicit request =>
-  
+        withJsonBody[UserData] { ud => userModel.createUser(UserData(ud.username, ud.password, ud.major, ud.graduationYear, ud.githubLink)).map { ouserId =>   
+      ouserId match {
+        case Some(userid) =>
+          Ok(Json.toJson(true))
+            .withSession("username" -> ud.username, "userid" -> userid.toString, "csrfToken" -> play.filters.csrf.CSRF.getToken.map(_.value).getOrElse(""))
+        case None =>
+          Ok(Json.toJson(false))
+      }
+    } }
   }
 
   // def getUserData = Action.async { implicit request =>

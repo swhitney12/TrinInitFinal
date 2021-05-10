@@ -21,8 +21,6 @@ class TrininitReactComponent extends React.Component {
             createMessage: "",
             inProfileState: false, 
             inCreateUserState: false
-            
-        
         };
     }
 
