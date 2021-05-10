@@ -44,22 +44,32 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
       project.repositorylink, project.creationdate)))
   }
   
-  // def getPersonalProjects(userId: Int): Future[Seq[ProjectData]] = {
-  //   val ownedProject = db.run(Projects.filter(_.ownerid === userId).result)
-  //   val collabProjects = db.run(Userprojects.filter(_.userid === userId).result)
-  // }
-
   /**
-    * Adds 1 like to a project
+    * Gets all ssociated project that a user is a collaborator on
     *
-    * @param projectId
     * @param userId
-    * @return greater than 0 if successful
+    * @return all associated projects if they exist in database, if not their is a none
     */
-  def likeProject(projectId: Int, userId: Int): Future[Int] = {
-    db.run(Projectlikes += ProjectlikesRow(Some(userId), Some(projectId)))
+  def getCollaboratorProjects(userId: Int): Future[Seq[Option[ProjectData]]] = {
+    val collabProjects = db.run(Userprojects.filter(_.userid === userId).result)
+
+    collabProjects.flatMap( projects => Future.sequence(projects.map(row => 
+      db.run(Projects.filter(_.id === row.projectid).result).map(_.headOption.map(proj => 
+        ProjectData(proj.id, proj.ownerid, proj.name, proj.description, proj.repositorylink, proj.creationdate)
+      )
+    ))))
   }
 
+  /**
+    *
+    * @param userId
+    * @return all projects owned by a user
+    */
+  def getOwnedProjects(userId: Int): Future[Seq[ProjectData]] = {
+    db.run(Projects.filter(_.ownerid === userId).result).map(_.map(pr =>
+      ProjectData(pr.id, pr.ownerid, pr.name, pr.description, pr.repositorylink, pr.creationdate)
+    ))
+  }
 
   /**
     * Adds a user as a collaborator to a project
@@ -70,6 +80,17 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
     */
   def addCollaborator(projectId: Int, userId: Int): Future[Int] = {
     db.run(Userprojects += UserprojectsRow(Some(userId), Some(projectId)))
+  }
+
+  /**
+    * Adds 1 like to a project
+    *
+    * @param projectId
+    * @param userId
+    * @return greater than 0 if successful
+    */
+  def likeProject(projectId: Int, userId: Int): Future[Int] = {
+    db.run(Projectlikes += ProjectlikesRow(Some(userId), Some(projectId)))
   }
 
   /**
