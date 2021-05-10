@@ -35,4 +35,6 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   //     Ok(Json.toJson(info))
   //     })
   // }
+  
+
 }
