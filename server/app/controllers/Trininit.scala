@@ -13,6 +13,7 @@ import play.api.db.slick.HasDatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.Future
+import play.api.libs.json._
 
 @Singleton
 class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit ec: ExecutionContext) 
@@ -22,12 +23,8 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   private val tagModel = new TagsModel(db)
   private val projectModel = new ProjectsModel(db)
 
-  def trininitIndex = Action { implicit request =>
-    Ok(views.html.trininit())
-  }
-
-  implicit val projectDataWrites = Json.writes[ProjectData]
-  implicit val projectDataReads = Json.reads[ProjectData]
+  implicit val userDataWrites = Json.writes[models.UserData]
+  implicit val userDataReads = Json.reads[models.UserData]
 
   def withJsonBody[A](f: A => Future[Result])(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
     request.body.asJson.map { body =>
@@ -38,10 +35,38 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     }.getOrElse(Future.successful(Redirect(routes.Trininit.trininitIndex())))
   }
 
-  def createProject = Action.async { implicit request =>
-    withJsonBody[ProjectData] { pd =>
-      projectModel.createProject(pd).map(projectID => Ok(Json.toJson(projectID))) 
-    }
+  def withSessionUsername(f: String => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
+    request.session.get("username").map(f).getOrElse(Future.successful(Ok(Json.toJson(Seq.empty[String]))))
   }
+
+  def withSessionUserid(f: Int => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
+    request.session.get("userid").map(userid => f(userid.toInt)).getOrElse(Future.successful(Ok(Json.toJson(Seq.empty[String]))))
+  }
+  
+  def trininitIndex = Action { implicit request =>
+    Ok(views.html.trininit())
+  }
+
+  def createUser = Action.async { implicit request =>
+        withJsonBody[UserData] { ud => userModel.createUser(UserData(ud.username, ud.password, ud.major, ud.graduationYear, ud.githubLink)).map { ouserId =>   
+      ouserId match {
+        case Some(userid) =>
+          Ok(Json.toJson(true))
+            .withSession("username" -> ud.username, "userid" -> userid.toString, "csrfToken" -> play.filters.csrf.CSRF.getToken.map(_.value).getOrElse(""))
+        case None =>
+          Ok(Json.toJson(false))
+      }
+    } }
+  }
+
+  // def getUserData = Action.async { implicit request =>
+  //   println("getting data")
+
+  //   userModel.getUserData("swibi").map(info => {
+  //     // println(info)
+  //     Ok(Json.toJson(info))
+  //     })
+  // }
+  
 
 }

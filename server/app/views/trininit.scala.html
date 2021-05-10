@@ -3,6 +3,7 @@
 @main("React Chat") {
     <input type="hidden" id="csrfToken" value="@helper.CSRF.getToken.value">
     <input type="hidden" id="defaultimg" value="@routes.Assets.versioned("images/default_profimg.jpg")">
+    <input type="hidden" id="createRoute" value="@routes.Trininit.createUser()">
     
 
 
