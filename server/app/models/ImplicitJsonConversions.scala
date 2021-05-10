@@ -12,8 +12,8 @@ object ImplicitJsonConversions {
     implicitly[Writes[Long]].contramap(_.getTime)
   }
 
-  implicit val userDataWrites = Json.writes[models.UserData]
-  implicit val userDataReads = Json.reads[models.UserData]
+  implicit val userDataWrites = Json.writes[UserData]
+  implicit val userDataReads = Json.reads[UserData]
   implicit val projectDataWrites = Json.writes[ProjectData]
   implicit val projectDataReads = Json.reads[ProjectData]
 }
