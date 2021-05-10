@@ -6,11 +6,21 @@ const profImg = document.getElementById("defaultimg").value;
 class TrininitReactComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            onProfile: false,
+            loggedIn: true
+        }
     }
     
     render () {
         // return ce(LoginComponent)
-        return ce(ProfileComponent)
+        if(this.state.onProfile == true) {
+            return ce(ProfileComponent)
+        } else if (this.state.loggedIn == true) {
+            return ce(MainComponent)
+        } else if (this.state.loggedIn == false) {
+            return ce(LoginComponent)
+        }
     }
 }
 

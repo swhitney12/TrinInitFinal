@@ -8,3 +8,4 @@ GET        /versionedAssets/*file        controllers.Assets.versioned(path="/pub
 
 #TrinInit Routes
 GET        /                         controllers.Trininit.trininitIndex
+#GET        /getUserData              controllers.Trininit.getUserData
