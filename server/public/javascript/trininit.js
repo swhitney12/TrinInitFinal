@@ -176,7 +176,7 @@ class CreateUserComponent extends React.Component {
         const username = this.state.createUserName;
         const password = this.state.createUserPass;
         const major = this.state.createUserMajor;
-        const graduationYear = this.state.createUserGradYear;
+        const graduationYear = parseInt(this.state.createUserGradYear);
         const githubLink = this.state.createUserGithubLink;
 
         fetch(createRoute, { 

@@ -15,6 +15,8 @@ import scala.concurrent.Future
 import play.api.libs.json._
 import models.ImplicitJsonConversions._
 
+
+
 @Singleton
 class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit ec: ExecutionContext) 
     extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
@@ -37,6 +39,7 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
           f(a) 
         }
         case e @ JsError(_) =>  {
+          println(e)
           println(body) 
           Future.successful(Redirect(routes.Trininit.trininitIndex()))
         }
@@ -61,27 +64,18 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
           userModel.createUser(ud).map { ouserId =>  Ok(Json.toJson(ouserId)) 
           } 
         }
-      }
-
-    //           withJsonBody[UserData] { ud => userModel.createUser(ud).map { ouserId =>   
-    //   ouserId match {
-    //     case Some(userid) =>
-    //       Ok(Json.toJson(true))
-    //         .withSession("username" -> ud.username, "userid" -> userid.toString, "csrfToken" -> play.filters.csrf.CSRF.getToken.map(_.value).getOrElse(""))
-    //     case None =>
-    //       Ok(Json.toJson(false))
-    //   }
-    // } }
+    }
   }
 
-  // def getUserData = Action.async { implicit request =>
-  //   println("getting data")
+  //get username w/ json
+  def getUserData = Action.async { implicit request =>
+    println("getting data")
 
-  //   userModel.getUserData("swibi").map(info => {
-  //     // println(info)
-  //     Ok(Json.toJson(info))
-  //     })
-  // }
+    userModel.getUserData("swibi").map(info => {
+      println(info)
+      Ok(Json.toJson(info))
+      })
+  }
   
 
 }
