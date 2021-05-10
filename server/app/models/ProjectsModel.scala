@@ -33,8 +33,21 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
       project.repositoryLink, project.creationDate))
   }
 
-  // getPersonalProject(userId)
-  // getAllProject
+  /**
+    *
+    * @return all projects
+    */
+  def getAllProjects(): Future[Seq[ProjectData]] = {
+    val projects = db.run(Projects.result)
+
+    projects.map(_.map(project => ProjectData(project.id, project.ownerid, project.name, project.description,
+      project.repositorylink, project.creationdate)))
+  }
+  
+  // def getPersonalProjects(userId: Int): Future[Seq[ProjectData]] = {
+  //   val ownedProject = db.run(Projects.filter(_.ownerid === userId).result)
+  //   val collabProjects = db.run(Userprojects.filter(_.userid === userId).result)
+  // }
 
   /**
     * Adds 1 like to a project
@@ -45,6 +58,18 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
     */
   def likeProject(projectId: Int, userId: Int): Future[Int] = {
     db.run(Projectlikes += ProjectlikesRow(Some(userId), Some(projectId)))
+  }
+
+
+  /**
+    * Adds a user as a collaborator to a project
+    *
+    * @param projectId
+    * @param userId
+    * @return greater than 0 if add is successful
+    */
+  def addCollaborator(projectId: Int, userId: Int): Future[Int] = {
+    db.run(Userprojects += UserprojectsRow(Some(userId), Some(projectId)))
   }
 
   /**
