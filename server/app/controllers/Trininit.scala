@@ -38,8 +38,6 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
           f(a) 
         }
         case e @ JsError(_) =>  {
-          println(e)
-          println(body)
           Future.successful(Redirect(routes.Trininit.trininitIndex()))
         }
       }

@@ -587,9 +587,9 @@ class ProjectViewComponent extends React.Component {
           body: JSON.stringify({id, ownerId, name, description, repositoryLink, creationDate})
         }).then(res => res.json()).then(data => {
           if(data) {
-              console.log("liked")
+            //   console.log("liked")
           } else {
-              console.log("like failed")
+            //   console.log("like failed")
           }
         });
     }
