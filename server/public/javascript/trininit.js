@@ -423,8 +423,8 @@ class MainComponent extends React.Component {
                 ce('div', {id: 'rightMainDiv'},
 
                     ce('div', {id: 'ProjSecListings'},
-                        Projects.map(project => {
-                            ce('div', {className: 'ProjListing'},
+                        this.state.Projects.map(project => {
+                            return ce('div', {className: 'ProjListing'},
                                 ce('div', {className: 'ProjListingTitleDiv'},
                                     ce('h3', {className: 'ProjListingTitle'}, project['name']),
                                     ce('p', {className: 'ProjListingCreator'}, 'Created by '), //TODO
@@ -458,6 +458,34 @@ class MainComponent extends React.Component {
         fetch(getAllProjectsRoute).then(res => res.json()).then(data => {
             this.setState({Projects: data})
         });
+    }
+
+    getLikeCount(projId) {
+        fetch(getLikeCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                return data;
+            } else {
+                return "failed";
+            }
+          });
+    }
+
+    getCommentCount(projId) {
+        fetch(getCommentCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                return data;
+            } else {
+                return "failed";
+            }
+          });
     }
 
 
