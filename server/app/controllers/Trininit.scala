@@ -16,19 +16,12 @@ import scala.concurrent.Future
 import play.api.libs.json._
 import models.ImplicitJsonConversions._
 
-
-
 @Singleton
 class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider, cc: ControllerComponents)(implicit ec: ExecutionContext) 
     extends AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
 
   private val userModel = new UsersModel(db)
   private val tagModel = new TagsModel(db)
-  private val projectModel = new ProjectsModel(db)
-
-  implicit val userDataWrites = Json.writes[models.UserData]
-  implicit val userDataReads = Json.reads[models.UserData]
-
   private val projectsModel = new ProjectsModel(db)
   
   def withJsonBody[A](f: A => Future[Result])(implicit request: Request[AnyContent], reads: Reads[A]): Future[Result] = {
@@ -79,12 +72,24 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     }
   }
 
-  //get username w/ json
   def getUserData = Action.async { implicit request =>
     withSessionUsername(username => {
       println("getting user data")
       userModel.getUserData(username).map(data => Ok(Json.toJson(data)))
     })
+  }
+
+  def getProjectData = Action.async { implicit request =>
+    projectsModel.getProject(1).map { project =>
+      Ok(Json.toJson(project))
+    }
+  }
+
+  def likeProject = Action.async { implicit request =>
+    //change to withsessionuserid to pass into likeproject, hardcoded for now
+    withJsonBody[ProjectData] {pd =>
+      projectsModel.likeProject(pd.id, 1).map(like => Ok(Json.toJson(true)))
+    }
   }
   
 

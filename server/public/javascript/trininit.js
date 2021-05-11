@@ -5,6 +5,8 @@ const validateRoute = document.getElementById("validateRoute").value;
 //const tasksRoute = document.getElementById("tasksRoute").value;
 const createRoute = document.getElementById("createRoute").value;
 const getDataRoute = document.getElementById("getDataRoute").value;
+const getProjectDataRoute = document.getElementById("getProjectDataRoute").value;
+const likeProjectRoute = document.getElementById("likeProjectRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
@@ -23,18 +25,19 @@ class TrininitReactComponent extends React.Component {
 
     render() {
         
-        if(this.state.inLoginState) {
-            return ce(LoginComponent, {doLogin: () => this.setState({ inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
-        }
-        if(this.state.inProfileState){
-            return ce(ProfileComponent)
-        }
-        if(this.state.inMainState) {
-            return ce(MainComponent, {toProfile: () => this.setState({inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
-        }
-        if(this.state.inCreateUserState){
-            return ce(CreateUserComponent, {toLogin: () => this.setState({inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false})})
-        }
+        return ce(ProjectViewComponent)
+        // if(this.state.inLoginState) {
+        //     return ce(LoginComponent, {doLogin: () => this.setState({ inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
+        // }
+        // if(this.state.inProfileState){
+        //     return ce(ProfileComponent)
+        // }
+        // if(this.state.inMainState) {
+        //     return ce(MainComponent, {toProfile: () => this.setState({inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+        // }
+        // if(this.state.inCreateUserState){
+        //     return ce(CreateUserComponent, {toLogin: () => this.setState({inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false})})
+        // }
         
 
     }
@@ -466,9 +469,22 @@ class ProjectViewComponent extends React.Component {
         this.state={
             //hardcoded for testing purposes
             searchInput:"",
-            username:"SabrinaWhi",
+            username:"",
+            Name: "",
+            ID: "",
+            OwnerID: "",
+            Owner: "",
+            RepositoryLink: "",
+            Description: "",
+            CreationDate: "",
+            Collaborators: [],
+            Comments: []
             //add state variables here
         };
+    }
+
+    componentDidMount() {
+        this.getProjectData();
     }
 
     render() {
@@ -496,7 +512,7 @@ class ProjectViewComponent extends React.Component {
 
             ce('div', {id: 'projectViewDiv'},
                 ce('div', {id: 'projectViewTitleDiv'},
-                    ce('h1', {id: 'projectViewTitle'}, 'Project Title')
+                    ce('h1', {id: 'projectViewTitle'}, this.state.Name)
                 ),
 
                 ce('div', {id: 'projectViewUserInfoDiv'},
@@ -505,7 +521,7 @@ class ProjectViewComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'projectViewUserNameDiv'},
-                        ce('h2', {id: 'projectViewUserName'}, 'rainihuynh'),
+                        ce('h2', {id: 'projectViewUserName'}, this.state.Owner),
                     )
                 ),
 
@@ -518,14 +534,14 @@ class ProjectViewComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'projectLikeBtnDiv'},
-                        ce('button', {id: 'projectViewLikeBtn'},
+                        ce('button', {id: 'projectViewLikeBtn', onClick: () => this.addToLikes()},
                             ce('i', {className: "far fa-heart"})
                         )
                     )
                 ),
 
                 ce('div', {id: 'projectViewDescDiv'},
-                    ce('p', {id: 'projectViewDesc'}, 'Duis non commodo tortor. Proin diam odio, aliquet sed tellus quis, maximus accumsan dolor. Donec egestas malesuada nibh, quis dignissim diam dictum non. Duis eleifend tristique congue. Maecenas in pharetra velit. Phasellus ac odio eget mi pharetra mattis. Suspendisse consectetur dapibus nunc et rhoncus. Vivamus pellentesque mattis lorem, in fringilla arcu placerat non. Fusce ac lectus velit.')
+                    ce('p', {id: 'projectViewDesc'}, this.state.Description)
                 ),
 
                 ce('div', {id: 'projectViewCollabDiv'},
@@ -554,6 +570,34 @@ class ProjectViewComponent extends React.Component {
                 )
             )
         )
+    }
+
+    addToLikes() {
+        const id = this.state.ID;
+        const ownerId = this.state.OwnerID;
+        const name = this.state.Name;
+        const description = this.state.Description;
+        const repositoryLink = this.state.RepositoryLink;
+        const creationDate = this.state.CreationDate;
+
+
+        fetch(likeProjectRoute, { 
+          method: 'POST',
+          headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+          body: JSON.stringify({id, ownerId, name, description, repositoryLink, creationDate})
+        }).then(res => res.json()).then(data => {
+          if(data) {
+            //   console.log("liked")
+          } else {
+            //   console.log("like failed")
+          }
+        });
+    }
+
+    getProjectData() {
+        fetch(getProjectDataRoute).then(res => res.json()).then(data => {
+            this.setState({Name: data["name"], Description: data["description"], ID: data["id"], OwnerID: data["ownerid"], RepositoryLink: data["repositoryLink"], CreationDate: data["creationDate"]})
+        });
     }
 }
 
