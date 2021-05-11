@@ -520,14 +520,14 @@ class CreateProjectComponent extends React.Component {
         const name = this.state.newProjectTitleInput;
         const description = this.state.newProjectDescInput;
         const repoLink = this.state.repoLink;
-        const userid = this.state.userID;
-        const idplaceholder = 2;
+        const userid = parseInt(this.state.userID);
+        const id = parseInt('1');
         const creationDate = Date.now();
 
         fetch(createProjectRoute, { 
           method: 'POST',
           headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
-          body: JSON.stringify({idplaceholder, userid, name, description, repoLink, creationDate})
+          body: JSON.stringify({id, userid, name, description, repoLink, creationDate})
         }).then(res => res.json()).then(data => {
           if(data) {
             console.log(data);
