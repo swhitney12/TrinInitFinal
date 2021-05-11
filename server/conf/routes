@@ -13,8 +13,5 @@ POST        /getProjectData           controllers.Trininit.getProjectData
 POST       /createUser               controllers.Trininit.createUser
 POST       /validateUser             controllers.Trininit.validateUser
 POST       /likeProjectData          controllers.Trininit.likeProject
-<<<<<<< HEAD
 POST       /createProject            controllers.Trininit.createProject
-=======
 GET       /getUserProjects          controllers.Trininit.getUserProjects
->>>>>>> master
