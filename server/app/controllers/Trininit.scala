@@ -115,8 +115,9 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   
   def createProject = Action.async { implicit request =>
     withJsonBody[ProjectData] { pd =>
+      println(pd)
       projectsModel.createProject(pd).map { projectID =>
-        //project id is coming through as 1, even though actual id may be 22
+        //project id returns 1 for successful, need to find a new way to pass ID to func
         println(Json.toJson(projectID))
         Ok(Json.toJson(projectID))
       }

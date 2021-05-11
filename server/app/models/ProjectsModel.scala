@@ -32,6 +32,7 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
   def createProject(project: ProjectData): Future[Int] = {
     db.run(Projects += ProjectsRow(-1, project.ownerId, project.name, project.description,
       project.repositoryLink, project.creationDate))
+      //after made search for project and return ID
   }
 
   /**

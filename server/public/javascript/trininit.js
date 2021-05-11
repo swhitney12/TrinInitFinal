@@ -519,7 +519,7 @@ class CreateProjectComponent extends React.Component {
 
     getUserID() {
         fetch(getUserIDRoute).then(res => res.json()).then(data => {
-            this.setState({userID: data})
+            this.setState({userID: data});
         });
     }
 
@@ -527,15 +527,14 @@ class CreateProjectComponent extends React.Component {
         const name = this.state.newProjectTitleInput;
         const description = this.state.newProjectDescInput;
         const repositoryLink = this.state.repoLink;
-        //doesn't appear to be setting ownerID
-        const ownerid = parseInt(this.state.userID);
+        const ownerId = parseInt(this.state.userID);
         const id = parseInt('1');
         const creationDate = Date.now();
 
         fetch(createProjectRoute, { 
           method: 'POST',
           headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
-          body: JSON.stringify({id, ownerid, name, description, repositoryLink, creationDate})
+          body: JSON.stringify({id, ownerId, name, description, repositoryLink, creationDate})
         }).then(res => res.json()).then(data => {
           if(data) {
             selectedProjectId = data;
