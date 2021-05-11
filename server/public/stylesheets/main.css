@@ -72,6 +72,8 @@ body {
     padding-top: 0.8%;
     align-items: center;
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 -4px 20px 0 rgb(0 0 0 / 20%);
+    /* position: sticky;
+    top: 0; */
 }
 
 #trinInitLogoText {
@@ -295,7 +297,9 @@ hr {
     background-color: rgba(0, 0, 0, 0.178); 
     padding: 2%;
     width: 15%;
-    height: 81vh;
+    height: 90vh;
+    position: sticky;
+    top: 0;
 }
 
 #myProjectsMainTitleDiv {
@@ -351,6 +355,7 @@ hr {
 
 #rightMainDiv {
     padding-left: 3%;
+    width: 200vh;
 }
 
 /* Create Project Styles */
