@@ -11,11 +11,14 @@ const getOwnerDataRoute = document.getElementById("getOwnerDataRoute").value;
 const getProjectDataRoute = document.getElementById("getProjectDataRoute").value;
 const likeProjectRoute = document.getElementById("likeProjectRoute").value;
 const getUserProjectsRoute = document.getElementById("getUserProjectsRoute").value;
+const getAllProjectsRoute = document.getElementById("getAllProjectsRoute").value;
 const createProjectRoute = document.getElementById("createProjectRoute").value;
 const getUserIDRoute = document.getElementById("getUserIDRoute").value;
 const addCommentRoute = document.getElementById("addCommentRoute").value;
 const getProjectCommentsRoute = document.getElementById("getProjectCommentsRoute").value;
 const getCommentSenderDataRoute = document.getElementById("getCommentSenderDataRoute").value;
+const getLikeCountRoute = document.getElementById("getLikeCountRoute").value;
+const getCommentCountRoute = document.getElementById("getCommentCountRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
@@ -420,20 +423,20 @@ class MainComponent extends React.Component {
                 ce('div', {id: 'rightMainDiv'},
 
                     ce('div', {id: 'ProjSecListings'},
-                        //code to insert projects here, template for what will be appended in foreach
-
-                        ce('div', {className: 'ProjListing'},
-                            ce('div', {className: 'ProjListingTitleDiv'},
-                                ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
-                                ce('p', {className: 'ProjListingCreator'}, 'Created by rainihuynh'),
-                            ),
-                            ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
-                            ce('div', {className: 'ProjListingEngagementDiv'},
-                                ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
-                                ce('div', {className: 'vl'}),
-                                ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                        this.state.Projects.map(project => {
+                            return ce('div', {className: 'ProjListing'},
+                                ce('div', {className: 'ProjListingTitleDiv'},
+                                    ce('h3', {className: 'ProjListingTitle'}, project['name']),
+                                    ce('p', {className: 'ProjListingCreator'}, 'Created by '), //TODO
+                                ),
+                                ce('p', {className: 'ProjListingDesc'}, project['description']),
+                                ce('div', {className: 'ProjListingEngagementDiv'},
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                                    ce('div', {className: 'vl'}),
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                                )
                             )
-                        )
+                        })
                     )
                 ),
 
@@ -452,8 +455,40 @@ class MainComponent extends React.Component {
     }
 
     getAllProjects() {
-        //fetch code
+        fetch(getAllProjectsRoute).then(res => res.json()).then(data => {
+            this.setState({Projects: data})
+        });
     }
+
+    getLikeCount(projId) {
+        fetch(getLikeCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                return data;
+            } else {
+                return "failed";
+            }
+          });
+    }
+
+    getCommentCount(projId) {
+        fetch(getCommentCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                return data;
+            } else {
+                return "failed";
+            }
+          });
+    }
+
+
 }
 
 class CreateProjectComponent extends React.Component {

@@ -17,6 +17,10 @@ POST       /validateUser             controllers.Trininit.validateUser
 POST       /likeProjectData          controllers.Trininit.likeProject
 POST       /createProject            controllers.Trininit.createProject
 GET        /getUserProjects          controllers.Trininit.getUserProjects
+GET        /getAllProjects           controllers.Trininit.getAllProjects
 POST       /addComment               controllers.Trininit.addComment
 POST       /getComments              controllers.Trininit.getComments
 POST       /getCommentSenderData     controllers.Trininit.getCommentSenderData
+POST       /getLikeCount             controllers.TrinInit.getLikeCount
+POST       /getCommentCount          controllers.TrinInit.getCommentCount
+
