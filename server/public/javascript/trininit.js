@@ -11,6 +11,7 @@ const getProjectDataRoute = document.getElementById("getProjectDataRoute").value
 const likeProjectRoute = document.getElementById("likeProjectRoute").value;
 const getUserProjectsRoute = document.getElementById("getUserProjectsRoute").value;
 const createProjectRoute = document.getElementById("createProjectRoute").value;
+const getUserIDRoute = document.getElementById("getUserIDRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
@@ -40,7 +41,7 @@ class TrininitReactComponent extends React.Component {
             return ce(ProfileComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inMainState) {
-            return ce(MainComponent, {toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+            return ce(MainComponent, {toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}),toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inCreateUserState){
             return ce(CreateUserComponent, {toLogin: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false})})
@@ -184,10 +185,8 @@ class CreateUserComponent extends React.Component {
           body: JSON.stringify({username, password, major, graduationYear, githubLink})
         }).then(res => res.json()).then(data => {
           if(data) {
-            console.log(data);
             this.props.toLogin();
           } else {
-            console.log("fail");
             this.setState({ createMessage: "User Creation Failed"});
           }
         });
@@ -381,7 +380,7 @@ class MainComponent extends React.Component {
                         ),
 
                         ce('div', {id: 'addProjectMainBtnDiv'},
-                            ce('button', {id: 'addProjectMainBtn'}, '+')
+                            ce('button', {id: 'addProjectMainBtn', onClick: () => this.props.toCreateProjectView()}, '+')
                         )
                     ),
 
@@ -445,11 +444,16 @@ class CreateProjectComponent extends React.Component {
             searchInput:"",
             username:"SabrinaWhi",
             //add state variables here
-            name:"",
-            description:"",
+            newProjectTitleInput:"",
+            newProjectDescInput:"",
             repoLink:"",
+            userID: "",
             collaborators:[]
         };
+    }
+
+    componentDidMount() {
+        this.getUserID();
     }
 
     render() {  
@@ -484,12 +488,12 @@ class CreateProjectComponent extends React.Component {
                 ce('div', {id: 'newProjectTitlePromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'}, 'Project Title'),
                     //{type:'text', className:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}
-                    ce('input', {type: 'text', id: 'newProjectTitleInput', placeholder: 'Enter Your Project Name...', value: this.state.name, onChange: e => this.changeHandler(e)})
+                    ce('input', {type: 'text', id: 'newProjectTitleInput', placeholder: 'Enter Your Project Name...', value: this.state.newProjectTitleInput, onChange: e => this.changeHandler(e)})
                 ),
 
                 ce('div', {id: 'newProjectDescPromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'},'Description'),
-                    ce('textarea', {id: 'newProjectDescInput', rows: '4', cols: '50', placeholder: 'Enter Your Project Description...', value: this.state.description, onChange: e => this.changeHandler(e)})
+                    ce('textarea', {id: 'newProjectDescInput', rows: '4', cols: '50', placeholder: 'Enter Your Project Description...', value: this.state.newProjectDescInput, onChange: e => this.changeHandler(e)})
                 ),
 
                 ce('div', {id: 'newProjectCollabPromptDiv'},
@@ -507,21 +511,23 @@ class CreateProjectComponent extends React.Component {
     }
 
     getUserID() {
-        fetch(getDataRoute).then(res => res.json()).then(data => {
-            return data["id"];
+        fetch(getUserIDRoute).then(res => res.json()).then(data => {
+            this.setState({userID: data})
         });
     }
-    // id: Int, ownerId: Option[Int], name: String, description: String, 
-    // repositoryLink: Option[String], creationDate: Option[java.sql.Timestamp]
+
     createProject(e) {
-        console.log(e);
-        const name = this.state.name;
-        const description = this.state.description;
+        const name = this.state.newProjectTitleInput;
+        const description = this.state.newProjectDescInput;
         const repoLink = this.state.repoLink;
+        const userid = this.state.userID;
+        const idplaceholder = 2;
+        const creationDate = Date.now();
+
         fetch(createProjectRoute, { 
           method: 'POST',
           headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
-          body: JSON.stringify({getUserID, name, description, repoLink})
+          body: JSON.stringify({idplaceholder, userid, name, description, repoLink, creationDate})
         }).then(res => res.json()).then(data => {
           if(data) {
             console.log(data);

@@ -31,6 +31,8 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
           f(a) 
         }
         case e @ JsError(_) =>  {
+          println(body)
+          println(e)
           Future.successful(Redirect(routes.Trininit.trininitIndex()))
         }
       }
@@ -75,6 +77,12 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   def getUserData = Action.async { implicit request =>
     withSessionUsername(username => {
       userModel.getUserData(username).map(data => Ok(Json.toJson(data)))
+    })
+  }
+
+  def getUserID = Action.async { implicit request =>
+    withSessionUserid(userid => {
+      userModel.getUserData(userid).map(data => Ok(Json.toJson(userid)))
     })
   }
 
