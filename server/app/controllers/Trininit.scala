@@ -74,15 +74,22 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
 
   def getUserData = Action.async { implicit request =>
     withSessionUsername(username => {
-      println("getting user data")
       userModel.getUserData(username).map(data => Ok(Json.toJson(data)))
     })
   }
 
   def getProjectData = Action.async { implicit request =>
-    projectsModel.getProject(1).map { project =>
-      Ok(Json.toJson(project))
+    withJsonBody[Int] {projectid =>
+      projectsModel.getProject(projectid).map { project =>
+        Ok(Json.toJson(project))
+      }
     }
+  }
+
+  def getUserProjects = Action.async { implicit request => 
+    withSessionUserid(userid =>{
+      projectsModel.getOwnedProjects(userid).map(data => Ok(Json.toJson(data)))
+    })
   }
 
   def likeProject = Action.async { implicit request =>

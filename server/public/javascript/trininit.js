@@ -1,3 +1,5 @@
+"use strict";
+
 const ce = React.createElement
 const profImg = document.getElementById("defaultimg").value;
 const csrfToken = document.getElementById("csrfToken").value;
@@ -7,9 +9,12 @@ const createRoute = document.getElementById("createRoute").value;
 const getDataRoute = document.getElementById("getDataRoute").value;
 const getProjectDataRoute = document.getElementById("getProjectDataRoute").value;
 const likeProjectRoute = document.getElementById("likeProjectRoute").value;
+const getUserProjectsRoute = document.getElementById("getUserProjectsRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
+
+let id = ""
 
 
 class TrininitReactComponent extends React.Component {
@@ -19,27 +24,28 @@ class TrininitReactComponent extends React.Component {
             inProfileState: false, 
             inCreateUserState: false,
             inMainState: false,
-            inLoginState: true
+            inLoginState: true,
+            inProjectState: false
         };
     }
 
     render() {
-        
-        return ce(ProjectViewComponent)
-        // if(this.state.inLoginState) {
-        //     return ce(LoginComponent, {doLogin: () => this.setState({ inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
-        // }
-        // if(this.state.inProfileState){
-        //     return ce(ProfileComponent)
-        // }
-        // if(this.state.inMainState) {
-        //     return ce(MainComponent, {toProfile: () => this.setState({inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
-        // }
-        // if(this.state.inCreateUserState){
-        //     return ce(CreateUserComponent, {toLogin: () => this.setState({inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false})})
-        // }
-        
-
+        //cut these down
+        if(this.state.inLoginState) {
+            return ce(LoginComponent, {doLogin: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inProjectState: false, inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
+        }
+        if(this.state.inProfileState){
+            return ce(ProfileComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false})})
+        }
+        if(this.state.inMainState) {
+            return ce(MainComponent, {toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+        }
+        if(this.state.inCreateUserState){
+            return ce(CreateUserComponent, {toLogin: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false})})
+        }
+        if(this.state.inProjectState){
+            return ce(ProjectViewComponent)
+        }
     }
 
 }
@@ -171,7 +177,6 @@ class CreateUserComponent extends React.Component {
           body: JSON.stringify({username, password, major, graduationYear, githubLink})
         }).then(res => res.json()).then(data => {
           if(data) {
-            console.log("working")
             this.props.toLogin();
           } else {
             this.setState({ createMessage: "User Creation Failed"});
@@ -201,6 +206,7 @@ class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.getUserInfo();
+        this.getUserProjects();
     }
 
     render() {
@@ -270,10 +276,13 @@ class ProfileComponent extends React.Component {
                             {
                                 return ce('div', {className: 'ProjListing'},
                                     ce('div', {className: 'ProjListingTitleDiv'},
-                                        ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'), //replace w/ fed in project info
-                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username),
+                                        ce('h3', {className: 'ProjListingTitle', onClick: () => {
+                                            this.props.goToProjectView()
+                                            id = project["id"]
+                                        }}, project["name"]), 
+                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username), //adjust to use ownerid
                                     ),
-                                    ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
+                                    ce('p', {className: 'ProjListingDesc'}, project["description"]),
                                     ce('div', {className: 'ProjListingEngagementDiv'},
                                         ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
                                         ce('vl'),
@@ -305,6 +314,13 @@ class ProfileComponent extends React.Component {
             this.setState({username: data["username"], Major: data["major"], GradYear: data["graduationYear"], GitHubLink: data["githubLink"] })
         });
     }
+
+    getUserProjects() {
+        fetch(getUserProjectsRoute).then(res => res.json()).then(data => {
+            console.log(data)
+            this.setState({MyProjects: data})
+        });
+    }
 }
 
 class MainComponent extends React.Component {
@@ -323,6 +339,7 @@ class MainComponent extends React.Component {
 
     componentDidMount() {
         this.getUserInfo();
+        this.getUserProjects();
     }
 
     render() {
@@ -361,7 +378,9 @@ class MainComponent extends React.Component {
 
                     ce('div', {id: 'myProjectsMainListDiv'},
                         //insert code here to populate this, use below as template
-                        ce('h4', {className: 'mainSubheader2'}, 'Project 1')
+                        this.state.myProjects.map((project, index) => 
+                            ce('h4', {className: 'mainSubheader2'}, project["name"])
+                        )
                     ),
 
                     ce('div', {id: 'likedProjectsMainTitleDiv'},
@@ -400,6 +419,13 @@ class MainComponent extends React.Component {
     getUserInfo() {
         fetch(getDataRoute).then(res => res.json()).then(data => this.setState({username: data["username"] }));
     }
+
+    getUserProjects() {
+        fetch(getUserProjectsRoute).then(res => res.json()).then(data => {
+            this.setState({myProjects: data})
+        });
+    }
+
 }
 
 class CreateProjectComponent extends React.Component {
@@ -479,6 +505,7 @@ class ProjectViewComponent extends React.Component {
             CreationDate: "",
             Collaborators: [],
             Comments: []
+        
             //add state variables here
         };
     }
@@ -580,7 +607,6 @@ class ProjectViewComponent extends React.Component {
         const repositoryLink = this.state.RepositoryLink;
         const creationDate = this.state.CreationDate;
 
-
         fetch(likeProjectRoute, { 
           method: 'POST',
           headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
@@ -595,9 +621,20 @@ class ProjectViewComponent extends React.Component {
     }
 
     getProjectData() {
-        fetch(getProjectDataRoute).then(res => res.json()).then(data => {
-            this.setState({Name: data["name"], Description: data["description"], ID: data["id"], OwnerID: data["ownerid"], RepositoryLink: data["repositoryLink"], CreationDate: data["creationDate"]})
-        });
+        const projectid = id
+        
+        fetch(getProjectDataRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projectid)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                this.setState({Name: data["name"], Description: data["description"], ID: data["id"], OwnerID: data["ownerid"], RepositoryLink: data["repositoryLink"], CreationDate: data["creationDate"]})
+            } else {
+              //   console.log("like failed")
+            }
+          });
+        
     }
 }
 
