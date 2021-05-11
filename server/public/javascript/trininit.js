@@ -538,7 +538,7 @@ class CreateProjectComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
             selectedProjectId = data;
-            // this.props.goToProjectView();
+            this.props.goToProjectView();
           } else {
             console.log("fail");
           }
