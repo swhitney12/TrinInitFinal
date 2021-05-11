@@ -92,5 +92,12 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     }
   }
   
+  def createProject = Action.asyn { implicit request =>
+    withJsonBody[ProjectData] { pd =>
+      projectsModel.createProject(pd).map { projectID =>
+        Ok(Json.toJson(projectID))
+      }
+    }
+  }
 
 }
