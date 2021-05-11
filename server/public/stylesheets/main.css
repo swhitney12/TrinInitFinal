@@ -252,7 +252,7 @@ hr {
     cursor: pointer;
 }
 
-vl {
+.vl {
     height: 1em;
     margin: 0% 1% 2% 1%;
     border-left: 1px solid rgb(172, 172, 172);

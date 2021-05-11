@@ -1,14 +1,18 @@
   @()(implicit request: RequestHeader, flash: Flash)
 
-@main("React Chat") {
+@main("TrinInit") {
     <input type="hidden" id="csrfToken" value="@helper.CSRF.getToken.value">
     <input type="hidden" id="defaultimg" value="@routes.Assets.versioned("images/default_profimg.jpg")">
     <input type="hidden" id="createRoute" value="@routes.Trininit.createUser()">
     <input type="hidden" id="validateRoute" value="@routes.Trininit.validateUser()">
-    <input type="hidden" id="getDataRoute" value="@routes.Trininit.getUserData()">
+    <input type="hidden" id="getUserDataRoute" value="@routes.Trininit.getUserData()">
+    <input type="hidden" id="getOwnerDataRoute" value="@routes.Trininit.getOwnerData()">
     <input type="hidden" id="getProjectDataRoute" value="@routes.Trininit.getProjectData()">
     <input type="hidden" id="likeProjectRoute" value="@routes.Trininit.likeProject()">
+    <input type="hidden" id="createProjectRoute" value="@routes.Trininit.createProject()">
     <input type="hidden" id="getUserProjectsRoute" value="@routes.Trininit.getUserProjects()">
+    <input type="hidden" id="getUserIDRoute" value="@routes.Trininit.getUserID()">
+
 
 
     
