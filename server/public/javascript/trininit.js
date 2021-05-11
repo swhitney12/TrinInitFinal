@@ -204,12 +204,13 @@ class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            searchInput:"",
+            searchProjectsBannerInput:"",
             username:"",
             Major:"",
             GradYear:"",
             GitHubLink: "",
             MyProjects:[],
+            filteredProjects: [],
             Myinterests: "",
             MySkills: ""
         };
@@ -226,8 +227,9 @@ class ProfileComponent extends React.Component {
 
                 ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
-                    ce('form', {id:'searchProjectsFormBanner'},
-                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
+                    ce('div', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
+                        ce('button', {type: 'button', className: 'fa fa-search', onClick: () => this.searchProjects()})
                     )
                 ),
 
@@ -320,6 +322,10 @@ class ProfileComponent extends React.Component {
         )
     }
 
+    changeHandler(e) {
+        this.setState({[e.target['id']]: e.target.value });
+    }
+
     getUserInfo() {
         fetch(getUserDataRoute).then(res => res.json()).then(data => {
             this.setState({username: data["username"], Major: data["major"], GradYear: data["graduationYear"], GitHubLink: data["githubLink"] })
@@ -331,6 +337,13 @@ class ProfileComponent extends React.Component {
             this.setState({MyProjects: data})
         });
     }
+
+    searchProjects() {
+        //this code works, searchInput is the wrong name
+        console.log(this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
+        const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
+        filteredprojs.map(project => console.log(project["name"]));
+    }
 }
 
 class MainComponent extends React.Component {
@@ -340,15 +353,17 @@ class MainComponent extends React.Component {
             //hardcoded for testing purposes
             searchInput:"",
             username: "",
-            theProjects: [],
             likedProjects: [],
-            myProjects: []
+            myProjects: [],
+            Projects: [],
+            filteredProjects: []
         };
     }
 
     componentDidMount() {
         this.getUserName();
         this.getUserProjects();
+        this.getAllProjects();
     }
 
     render() {
@@ -406,6 +421,7 @@ class MainComponent extends React.Component {
 
                     ce('div', {id: 'ProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
+                        
                         ce('div', {className: 'ProjListing'},
                             ce('div', {className: 'ProjListingTitleDiv'},
                                 ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
@@ -435,6 +451,9 @@ class MainComponent extends React.Component {
         });
     }
 
+    getAllProjects() {
+        //fetch code
+    }
 }
 
 class CreateProjectComponent extends React.Component {
@@ -511,6 +530,7 @@ class CreateProjectComponent extends React.Component {
 
     changeHandler(e) {
         this.setState({[e.target['id']]: e.target.value });
+
     }
 
     getUserName() {
@@ -650,19 +670,19 @@ class ProjectViewComponent extends React.Component {
 
                     ce('hr', {id: 'commentHr'}),
                     ce('h2', {id: 'commentSecHeader'}, 'Comments'),
-                        this.state.Comments.map((comment, index) => {
-                            //console is buggy asf after this is added
-                            this.getSenderName(comment["userId"]);
+                    this.state.Comments.map((comment, index) => {
+                        //infinite loop b/c setstate re-renders, and map recalls getSenderName that sets state
+                        this.getSenderName(comment["userId"]);
                             return ce('div', {className: 'commentCardDiv', key: index}, 
-                                ce('h3', {className: 'commentSender'}, this.state.senderIDHolder),
-                                ce('p', {className: 'commentContent'}, comment["comment"]),
-                                ce('p', {className: 'sendTime'}, new Date(comment["creationDate"]).toString())
-                        )
-                    })
+                            ce('h3', {className: 'commentSender'}, this.state.senderIDHolder),
+                            ce('p', {className: 'commentContent'}, comment["comment"]),
+                            ce('p', {className: 'sendTime'}, new Date(comment["creationDate"]).toString())
+                            )
+                        })
+                    )
                 )
             )
-        )
-    }
+        }
 
     getUserName() {
         fetch(getUserDataRoute).then(res => res.json()).then(data => { this.setState({username: data["username"]}) });
@@ -719,7 +739,6 @@ class ProjectViewComponent extends React.Component {
                 //   console.log("like failed")
             }
           });
-        
     }
 
     getProjectComments() {
@@ -748,14 +767,13 @@ class ProjectViewComponent extends React.Component {
             body: JSON.stringify(senderid)
           }).then(res => res.json()).then(data => {
             if(data) {
-                this.setState({senderIDHolder: data["username"]})
+                this.setState({senderIDHolder: data["username"]});
             } else {
                 return "failed";
             }
           });
     }
 
-    //write getcomments and then just call it here every time one is added
     addProjectComment() {
         const id = parseInt('1');
         const projectId = this.state.ID;
