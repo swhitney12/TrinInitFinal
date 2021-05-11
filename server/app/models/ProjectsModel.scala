@@ -122,7 +122,16 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
     ))).map(pr => pr.flatten))
   }
 
-    //getCommentCount
+  /**
+    *
+    * @param projectId
+    * @return the amound of comments on a project
+    */
+  def getCommentCount(projectId: Int): Future[Int] = {
+    val matched = db.run(Projectcomments.filter(_.projectid === projectId).result)
+
+    matched.map(_.length)
+  }
 
   /**
     * Adds a comment to a project
