@@ -7,6 +7,7 @@ const createRoute = document.getElementById("createRoute").value;
 const getDataRoute = document.getElementById("getDataRoute").value;
 const getProjectDataRoute = document.getElementById("getProjectDataRoute").value;
 const likeProjectRoute = document.getElementById("likeProjectRoute").value;
+const getUserProjectsRoute = document.getElementById("getUserProjectsRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
@@ -24,22 +25,18 @@ class TrininitReactComponent extends React.Component {
     }
 
     render() {
-        
-        return ce(ProjectViewComponent)
-        // if(this.state.inLoginState) {
-        //     return ce(LoginComponent, {doLogin: () => this.setState({ inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
-        // }
-        // if(this.state.inProfileState){
-        //     return ce(ProfileComponent)
-        // }
-        // if(this.state.inMainState) {
-        //     return ce(MainComponent, {toProfile: () => this.setState({inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
-        // }
-        // if(this.state.inCreateUserState){
-        //     return ce(CreateUserComponent, {toLogin: () => this.setState({inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false})})
-        // }
-        
-
+        if(this.state.inLoginState) {
+            return ce(LoginComponent, {doLogin: () => this.setState({ inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
+        }
+        if(this.state.inProfileState){
+            return ce(ProfileComponent)
+        }
+        if(this.state.inMainState) {
+            return ce(MainComponent, {toProfile: () => this.setState({inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+        }
+        if(this.state.inCreateUserState){
+            return ce(CreateUserComponent, {toLogin: () => this.setState({inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false})})
+        }
     }
 
 }
@@ -201,6 +198,7 @@ class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.getUserInfo();
+        this.getUserProjects();
     }
 
     render() {
@@ -270,10 +268,10 @@ class ProfileComponent extends React.Component {
                             {
                                 return ce('div', {className: 'ProjListing'},
                                     ce('div', {className: 'ProjListingTitleDiv'},
-                                        ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'), //replace w/ fed in project info
-                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username),
+                                        ce('h3', {className: 'ProjListingTitle'}, project["name"]), 
+                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username), //adjust to use ownerid
                                     ),
-                                    ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
+                                    ce('p', {className: 'ProjListingDesc'}, project["description"]),
                                     ce('div', {className: 'ProjListingEngagementDiv'},
                                         ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
                                         ce('vl'),
@@ -303,6 +301,13 @@ class ProfileComponent extends React.Component {
     getUserInfo() {
         fetch(getDataRoute).then(res => res.json()).then(data => {
             this.setState({username: data["username"], Major: data["major"], GradYear: data["graduationYear"], GitHubLink: data["githubLink"] })
+        });
+    }
+
+    getUserProjects() {
+        fetch(getUserProjectsRoute).then(res => res.json()).then(data => {
+            console.log(data)
+            this.setState({MyProjects: data})
         });
     }
 }

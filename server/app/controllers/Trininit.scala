@@ -30,6 +30,7 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
           f(a) 
         }
         case e @ JsError(_) =>  {
+          println(e)
           Future.successful(Redirect(routes.Trininit.trininitIndex()))
         }
       }
@@ -73,7 +74,6 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
 
   def getUserData = Action.async { implicit request =>
     withSessionUsername(username => {
-      println("getting user data")
       userModel.getUserData(username).map(data => Ok(Json.toJson(data)))
     })
   }
@@ -82,6 +82,13 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     projectsModel.getProject(1).map { project =>
       Ok(Json.toJson(project))
     }
+  }
+
+  def getUserProjects = Action.async { implicit request => 
+    withSessionUserid(userid =>{
+      println("getting user projects")
+      projectsModel.getOwnedProjects(userid).map(data => Ok(Json.toJson(data)))
+    })
   }
 
   def likeProject = Action.async { implicit request =>
