@@ -114,6 +114,10 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     })
   }
 
+  def getAllProjects = Action.async { implicit request => 
+    projectsModel.getAllProjects().map(data => Ok(Json.toJson(data)))
+  }
+
   def likeProject = Action.async { implicit request =>
     //change to withsessionuserid to pass into likeproject, hardcoded for now
     withJsonBody[ProjectData] {pd =>
@@ -144,6 +148,18 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
       projectsModel.getComments(projectID).map {comments =>
         Ok(Json.toJson(comments))
       }
+    }
+  }
+
+  def getLikeCount = Action.async { implicit request => 
+    withJsonBody[Int] { projectId => 
+      projectsModel.getLikeCount(projectId).map(count => Ok(Json.toJson(count)))
+    }
+  }
+
+  def getCommentCount = Action.async { implicit request => 
+    withJsonBody[Int] { projectId => 
+      projectsModel.getCommentCount(projectId).map(count => Ok(Json.toJson(count)))
     }
   }
 
