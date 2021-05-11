@@ -25,7 +25,7 @@ class UsersModel(db: Database)(implicit ec: ExecutionContext) {
     * Creates a user in the database
     *
     * @param user
-    * @return greater than 0 if creation was successful
+    * @return the user's id if successful
     */
   def createUser(user: UserData): Future[Option[Int]] = {
     val matches = db.run(Users.filter(userRow => userRow.username === user.username).result)

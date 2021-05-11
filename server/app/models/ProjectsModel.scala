@@ -27,10 +27,10 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
     * Creates a project given the project's data
     *
     * @param project
-    * @return greater than 0 if successful
+    * @return the project's id
     */
   def createProject(project: ProjectData): Future[Int] = {
-    db.run(Projects += ProjectsRow(-1, project.ownerId, project.name, project.description,
+    db.run((Projects returning Projects.map(_.id)) += ProjectsRow(-1, project.ownerId, project.name, project.description,
       project.repositoryLink, project.creationDate))
   }
 
