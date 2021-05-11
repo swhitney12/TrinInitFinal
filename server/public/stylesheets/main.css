@@ -195,7 +195,8 @@ body {
 }
 
 #middleProfileDiv {
-    margin: 0 2% 0 2%;
+    margin: 0 2% 2% 2%;
+    padding-bottom: 2%;
     width: 110%;
     background-color: rgba(0, 0, 0, 0.178);
     border-radius: 5px;

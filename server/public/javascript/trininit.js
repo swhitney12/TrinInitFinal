@@ -218,13 +218,13 @@ class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.getUserInfo();
-        this.getUserProjects();
+        this.getUserProjects()
+        this.searchProjects();
     }
 
     render() {
         return ce('div', null, 
             ce('div', {id:'siteBanner'},
-
                 ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('div', {id:'searchProjectsFormBanner'},
@@ -270,10 +270,6 @@ class ProfileComponent extends React.Component {
                             ce('a', {className:'profileMainSubheader2', href: this.state.GitHubLink, target: '_blank'}, this.state.username)
                         )
                     ),
-
-                    ce('div', {id:'editProfileBtnDiv'},
-                        ce('button', {id: 'editProfileBtn'}, 'Edit Profile')
-                    )
                 ),
 
                 ce('div', {id: 'middleProfileDiv'},
@@ -285,7 +281,8 @@ class ProfileComponent extends React.Component {
 
                     ce('div', {id: 'myProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
-                        this.state.MyProjects.map((project, index) =>
+                        this.state.filteredProjects.map((project, index) =>
+                        // this.state.MyProjects.map((project, index) =>
                             {
                                 return ce('div', {className: 'ProjListing', key: index},
                                     ce('div', {className: 'ProjListingTitleDiv'},
@@ -340,9 +337,12 @@ class ProfileComponent extends React.Component {
 
     searchProjects() {
         //this code works, searchInput is the wrong name
-        console.log(this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
-        const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
-        filteredprojs.map(project => console.log(project["name"]));
+        console.log(this.state.MyProjects)
+        // if(this.state.searchProjectsBannerInput != "") {
+            console.log(this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
+            const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
+            this.setState({filteredProjects: filteredprojs})
+        // } else this.setState({filteredProjects: this.state.MyProjects})
     }
 }
 
