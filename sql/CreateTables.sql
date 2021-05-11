@@ -31,6 +31,7 @@ CREATE TABLE projectLikes (
   projectId int REFERENCES projects(id) ON DELETE CASCADE
 );
 
+-- this is collaborators
 CREATE TABLE userProjects(
   userId int REFERENCES users(id) ON DELETE CASCADE,
   projectId int REFERENCES projects(id) ON DELETE CASCADE 
