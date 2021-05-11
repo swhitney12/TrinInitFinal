@@ -16,4 +16,6 @@ object ImplicitJsonConversions {
   implicit val userDataReads = Json.reads[UserData]
   implicit val projectDataWrites = Json.writes[ProjectData]
   implicit val projectDataReads = Json.reads[ProjectData]
+  implicit val commentDataWrites = Json.writes[CommentData]
+  implicit val commentDataReads = Json.reads[CommentData]
 }

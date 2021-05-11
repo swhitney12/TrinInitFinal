@@ -13,6 +13,9 @@ const likeProjectRoute = document.getElementById("likeProjectRoute").value;
 const getUserProjectsRoute = document.getElementById("getUserProjectsRoute").value;
 const createProjectRoute = document.getElementById("createProjectRoute").value;
 const getUserIDRoute = document.getElementById("getUserIDRoute").value;
+const addCommentRoute = document.getElementById("addCommentRoute").value;
+const getProjectCommentsRoute = document.getElementById("getProjectCommentsRoute").value;
+const getCommentSenderDataRoute = document.getElementById("getCommentSenderDataRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
@@ -340,7 +343,6 @@ class MainComponent extends React.Component {
             theProjects: [],
             likedProjects: [],
             myProjects: []
-            //add state variables here
         };
     }
 
@@ -439,10 +441,8 @@ class CreateProjectComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            //hardcoded for testing purposes
             searchInput:"",
             username:"",
-            //add state variables here
             newProjectTitleInput:"",
             newProjectDescInput:"",
             repoLink:"",
@@ -553,6 +553,7 @@ class ProjectViewComponent extends React.Component {
             //hardcoded for testing purposes
             searchInput:"",
             username:"",
+            userID: "",
             Name: "",
             ID: "",
             OwnerID: "",
@@ -560,17 +561,19 @@ class ProjectViewComponent extends React.Component {
             RepositoryLink: "",
             Description: "",
             CreationDate: "",
+            commentInput: "",
+            senderIDHolder: "",
             Collaborators: [],
             Comments: []
-        
-            //add state variables here
         };
     }
 
     componentDidMount() {
         this.getUserName();
+        this.getUserID();
         this.getOwnerName();
         this.getProjectData();
+        this.getProjectComments();
     }
 
     render() {
@@ -639,31 +642,44 @@ class ProjectViewComponent extends React.Component {
                     ce('h2', {id: 'commentInputHeader'}, 'Leave a Comment'),
 
                     ce('div', {id: 'commentInputDiv'},
-                        ce('textarea', {id: 'commentInput', rows: '2', cols: '100', placeholder: 'Type Your Comment...'}),
-                        ce('button', {id: 'commentSendBtn'}, 
+                        ce('textarea', {id: 'commentInput', rows: '2', cols: '100', placeholder: 'Type Your Comment...', value: this.state.commentInput, onChange: e => this.changeHandler(e)}),
+                        ce('button', {id: 'commentSendBtn', onClick: () => this.addProjectComment()}, 
                             ce('i', {className: 'fas fa-paper-plane'})
                         )
                     ),
 
                     ce('hr', {id: 'commentHr'}),
                     ce('h2', {id: 'commentSecHeader'}, 'Comments'),
-
-                    ce('div', {className: 'commentCardDiv'}, 
-                        ce('h3', {className: 'commentSender'}, 'Sender Username'),
-                        ce('p', {className: 'commentContent'}, 'Here is the content of a comment'),
-                        ce('p', {className: 'sendTime'}, 'about 2 hours ago')
-                    )
+                        this.state.Comments.map((comment, index) => {
+                            //console is buggy asf after this is added
+                            this.getSenderName(comment["userId"]);
+                            return ce('div', {className: 'commentCardDiv', key: index}, 
+                                ce('h3', {className: 'commentSender'}, this.state.senderIDHolder),
+                                ce('p', {className: 'commentContent'}, comment["comment"]),
+                                ce('p', {className: 'sendTime'}, new Date(comment["creationDate"]).toString())
+                        )
+                    })
                 )
             )
         )
     }
 
     getUserName() {
-        fetch(getUserDataRoute).then(res => res.json()).then(data => this.setState({username: data["username"] }));
+        fetch(getUserDataRoute).then(res => res.json()).then(data => { this.setState({username: data["username"]}) });
+    }
+
+    getUserID() {
+        fetch(getUserIDRoute).then(res => res.json()).then(data => {
+            this.setState({userID: data});
+        });
     }
 
     getOwnerName() {
         fetch(getOwnerDataRoute).then(res => res.json()).then(data => this.setState({Owner: data["username"]}))
+    }
+
+    changeHandler(e) {
+        this.setState({[e.target['id']]: e.target.value });
     }
 
     addToLikes() {
@@ -680,19 +696,16 @@ class ProjectViewComponent extends React.Component {
           body: JSON.stringify({id, ownerId, name, description, repositoryLink, creationDate})
         }).then(res => res.json()).then(data => {
           if(data) {
-            //   console.log("liked")
+              //change button color?
           } else {
+            //include some error message
             //   console.log("like failed")
           }
         });
     }
 
     getProjectData() {
-        //this is empty or returning NaN
-        console.log(selectedProjectId);
         const projectid = parseInt(selectedProjectId);
-
-        console.log(projectid);
         
         fetch(getProjectDataRoute, { 
             method: 'POST',
@@ -700,13 +713,69 @@ class ProjectViewComponent extends React.Component {
             body: JSON.stringify(projectid)
           }).then(res => res.json()).then(data => {
             if(data) {
-                console.log(data)
                 this.setState({Name: data["name"], Description: data["description"], ID: data["id"], OwnerID: data["ownerid"], RepositoryLink: data["repositoryLink"], CreationDate: data["creationDate"]})
             } else {
-              //   console.log("like failed")
+                //include some error message
+                //   console.log("like failed")
             }
           });
         
+    }
+
+    getProjectComments() {
+        const projectId = parseInt(selectedProjectId);
+
+        fetch(getProjectCommentsRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projectId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                this.setState({Comments: data})
+            } else {
+                //include some error message
+                // console.log("like failed")
+            }
+          });
+    }
+
+    getSenderName(idnum) {
+        const senderid = parseInt(idnum);
+
+        fetch(getCommentSenderDataRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(senderid)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                this.setState({senderIDHolder: data["username"]})
+            } else {
+                return "failed";
+            }
+          });
+    }
+
+    //write getcomments and then just call it here every time one is added
+    addProjectComment() {
+        const id = parseInt('1');
+        const projectId = this.state.ID;
+        const userId = parseInt(this.state.userID);
+        const creationDate = Date.now();
+        const comment = this.state.commentInput;
+
+        console.log(userId)
+        fetch(addCommentRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify({id, projectId, userId, creationDate, comment})
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                this.getProjectComments();
+            } else {
+                //include some error message
+                // console.log("like failed")
+            }
+          });
     }
 }
 

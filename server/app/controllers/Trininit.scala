@@ -86,6 +86,14 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     })
   }
 
+  def getCommentSenderData = Action.async { implicit request => 
+    withJsonBody[Int] { senderid =>
+      userModel.getUserData(senderid).map { data =>
+        Ok(Json.toJson(data))
+      }
+    }
+  }
+
   def getUserID = Action.async { implicit request =>
     withSessionUserid(userid => {
       userModel.getUserData(userid).map(data => Ok(Json.toJson(userid)))
@@ -115,11 +123,26 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   
   def createProject = Action.async { implicit request =>
     withJsonBody[ProjectData] { pd =>
-      println(pd)
       projectsModel.createProject(pd).map { projectID =>
         //project id returns 1 for successful, need to find a new way to pass ID to func
         println(Json.toJson(projectID))
         Ok(Json.toJson(projectID))
+      }
+    }
+  }
+
+  def addComment = Action.async { implicit request =>
+    withJsonBody[CommentData] { cd => 
+      projectsModel.addComment(cd).map { comment =>
+        Ok(Json.toJson(comment))
+      }
+    }
+  }
+
+  def getComments = Action.async { implicit request =>
+    withJsonBody[Int] { projectID =>
+      projectsModel.getComments(projectID).map {comments =>
+        Ok(Json.toJson(comments))
       }
     }
   }
