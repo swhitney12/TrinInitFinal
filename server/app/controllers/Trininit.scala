@@ -80,6 +80,12 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     })
   }
 
+  def getOwnerData = Action.async { implicit request =>
+    withSessionUserid(userid => {
+      userModel.getUserData(userid).map(data => Ok(Json.toJson(data)))
+    })
+  }
+
   def getUserID = Action.async { implicit request =>
     withSessionUserid(userid => {
       userModel.getUserData(userid).map(data => Ok(Json.toJson(userid)))
@@ -110,6 +116,8 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   def createProject = Action.async { implicit request =>
     withJsonBody[ProjectData] { pd =>
       projectsModel.createProject(pd).map { projectID =>
+        //project id is coming through as 1, even though actual id may be 22
+        println(Json.toJson(projectID))
         Ok(Json.toJson(projectID))
       }
     }
