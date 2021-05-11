@@ -421,7 +421,7 @@ class MainComponent extends React.Component {
 
                     ce('div', {id: 'ProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
-                        
+
                         ce('div', {className: 'ProjListing'},
                             ce('div', {className: 'ProjListingTitleDiv'},
                                 ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
@@ -579,6 +579,7 @@ class ProjectViewComponent extends React.Component {
             OwnerID: "",
             Owner: "",
             RepositoryLink: "",
+            Liked: false,
             Description: "",
             CreationDate: "",
             commentInput: "",
@@ -594,6 +595,8 @@ class ProjectViewComponent extends React.Component {
         this.getOwnerName();
         this.getProjectData();
         this.getProjectComments();
+        //todo
+        // this.isLiked();
     }
 
     render() {

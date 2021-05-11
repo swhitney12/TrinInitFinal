@@ -122,6 +122,8 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
     ))).map(pr => pr.flatten))
   }
 
+    //getCommentCount
+
   /**
     * Adds a comment to a project
     *
