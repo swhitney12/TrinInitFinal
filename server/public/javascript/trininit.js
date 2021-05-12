@@ -19,6 +19,8 @@ const getCommentSenderDataRoute = document.getElementById("getCommentSenderDataR
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
+const setCollabsRoute = document.getElementById("setCollabsRoute").value;
+const getCollaboratorIDRoute = document.getElementById("getCollaboratorIDRoute").value;
 
 let selectedProjectId = ""
 
@@ -467,13 +469,14 @@ class CreateProjectComponent extends React.Component {
             repoLink:"",
             userID: "",
             projectID: "",
-            collaborators:[]
+            collaborators:""
         };
     }
 
     componentDidMount() {
         this.getUserName();
         this.getUserID();
+        this.setCollabs();
     }
 
     render() {  
@@ -518,7 +521,7 @@ class CreateProjectComponent extends React.Component {
 
                 ce('div', {id: 'newProjectCollabPromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'}, 'Invite Collaborator'),
-                    ce('textarea', {id: 'newProjectCollabInput', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...'})
+                    ce('textarea', {id: 'collaborators', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...', value: this.state.collaborators, onChange: e => this.changeHandler(e)})
                 ),
 
                 ce('button', {id: 'createNewProjectBtn', onClick: () =>  {
@@ -543,6 +546,45 @@ class CreateProjectComponent extends React.Component {
         });
     }
 
+    getCollaboratorID(username) {
+        fetch(getCollaboratorIDRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(username)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+              //selectedProjectId = data;
+              //this.props.goToProjectView();
+              return data;
+            } else {
+              console.log("fail");
+            }
+          });
+    }
+
+    setCollabs(){
+        const collaboratorsString = this.state.collaborators; 
+        const collaborators = collaboratorsString.split(",");
+        const collabIds = [];
+        collaborators.forEach(collab => {
+            collabIds.push(this.getCollaboratorID(collab));
+        })
+
+        fetch(setCollabsRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify({})
+          }).then(res => res.json()).then(data => {
+            if(data) {
+              selectedProjectId = data;
+              this.props.goToProjectView();
+            } else {
+              console.log("fail");
+            }
+          });
+    }
+    
+
     createProject() {
         const name = this.state.newProjectTitleInput;
         const description = this.state.newProjectDescInput;
@@ -550,6 +592,7 @@ class CreateProjectComponent extends React.Component {
         const ownerId = parseInt(this.state.userID);
         const id = parseInt('1');
         const creationDate = Date.now();
+        //const collabs = this.state.collaborators;
 
         fetch(createProjectRoute, { 
           method: 'POST',
@@ -584,7 +627,7 @@ class ProjectViewComponent extends React.Component {
             CreationDate: "",
             commentInput: "",
             senderIDHolder: "",
-            Collaborators: [],
+            Collaborators: "",
             Comments: []
         };
     }

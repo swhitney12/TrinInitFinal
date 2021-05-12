@@ -100,6 +100,23 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     })
   }
 
+  def setCollabs = Action.async {implicit request =>
+    withJsonBody[(Int, Int)] {(userid, projectid) =>
+      projectsModel.addCollaborator(userid, projectid).map { collabNum =>
+        Ok(Json.toJson(collabNum))
+      }
+    }
+
+  }
+
+  def getCollaboratorID = Action.async {implicit request =>
+    withJsonBody[String] { collab =>
+      userModel.getUserData(collab).map { data =>
+        Ok(Json.toJson(data))
+      }
+    }
+  }
+
   def getProjectData = Action.async { implicit request =>
     withJsonBody[Int] {projectid =>
       projectsModel.getProject(projectid).map { project =>
