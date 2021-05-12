@@ -22,6 +22,9 @@ const getCommentCountRoute = document.getElementById("getCommentCountRoute").val
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
+const setCollabsRoute = document.getElementById("setCollabsRoute").value;
+const getCollaboratorIDRoute = document.getElementById("getCollaboratorIDRoute").value;
+const getLikedProjectsRoute = document.getElementById("getLikedProjectsRoute").value;
 
 let selectedProjectId = ""
 
@@ -51,7 +54,7 @@ class TrininitReactComponent extends React.Component {
             return ce(ProfileComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inMainState) {
-            return ce(MainComponent, {toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+            return ce(MainComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inProjectState){
             return ce(ProjectViewComponent, {toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
@@ -221,7 +224,7 @@ class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.getUserInfo();
-        this.getUserProjects()
+        this.getUserProjects();
         this.searchProjects();
     }
 
@@ -347,6 +350,8 @@ class ProfileComponent extends React.Component {
         const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
         this.setState({filteredProjects: filteredprojs})
     }
+
+    
 }
 
 class MainComponent extends React.Component {
@@ -359,6 +364,9 @@ class MainComponent extends React.Component {
             likedProjects: [],
             myProjects: [],
             Projects: [],
+            owners: {},
+            likes: {},
+            comments: {},
             filteredProjects: []
         };
     }
@@ -367,6 +375,7 @@ class MainComponent extends React.Component {
         this.getUserName();
         this.getUserProjects();
         this.getAllProjects();
+        this.getLikedProjects();
     }
 
     render() {
@@ -409,7 +418,10 @@ class MainComponent extends React.Component {
                     ce('div', {id: 'myProjectsMainListDiv'},
                         //insert code here to populate this, use below as template
                         this.state.myProjects.map((project, index) => 
-                            ce('h4', {className: 'mainSubheader2', key: index}, project["name"])
+                            ce('h4', {className: 'mainSubheader2', key: index, onClick: () => {
+                                this.props.goToProjectView()
+                                selectedProjectId = project["id"]}}, 
+                                project["name"])
                         )
                     ),
 
@@ -419,24 +431,30 @@ class MainComponent extends React.Component {
 
                     ce('div', {id: 'likedProjectsMainListDiv'},
                         //insert code here to populate this, use below as a template
-                        ce('h4', {className: 'mainSubheader2'}, 'Liked Project 1')
+                        this.state.likedProjects.map((project, index) => 
+                            ce('h4', {className: 'mainSubheader2', key: index, onClick: () => {
+                                this.props.goToProjectView()
+                                selectedProjectId = project["id"]}}, 
+                                project["name"])
+                        )
+                        
                     )
                 ),
 
                 ce('div', {id: 'rightMainDiv'},
 
                     ce('div', {id: 'ProjSecListings'},
-                        this.state.Projects.map(project => {
-                            return ce('div', {className: 'ProjListing'},
+                        this.state.Projects.map((project,index) => {
+                            return ce('div', {className: 'ProjListing', key: index},
                                 ce('div', {className: 'ProjListingTitleDiv'},
                                     ce('h3', {className: 'ProjListingTitle'}, project['name']),
-                                    ce('p', {className: 'ProjListingCreator'}, 'Created by '), //TODO
+                                    ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), //TODO
                                 ),
                                 ce('p', {className: 'ProjListingDesc'}, project['description']),
                                 ce('div', {className: 'ProjListingEngagementDiv'},
-                                    ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.likes[project['id']]) + ' Likes'),
                                     ce('div', {className: 'vl'}),
-                                    ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.comments[project['id']]) + ' Comments')
                                 )
                             )
                         })
@@ -457,10 +475,45 @@ class MainComponent extends React.Component {
         });
     }
 
+    getLikedProjects() {
+        fetch(getLikedProjectsRoute).then(res => res.json()).then(data => {
+            console.log(data);
+            this.setState({likedProjects: data})
+        });
+    }
+
     getAllProjects() {
         fetch(getAllProjectsRoute).then(res => res.json()).then(data => {
             this.setState({Projects: data})
+            //this.setState({filteredProjects: data})
+            for (let project of data) {
+                this.getOwnerName(project['ownerId'], project['id']);
+                this.getLikeCount(project['id']);
+                this.getCommentCount(project['id']);
+            }
         });
+    }
+
+    // searchProjects() {
+    //     console.log(this.state.Projects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
+    //     const filteredprojs = this.state.Projects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
+    //     this.setState({filteredProjects: filteredprojs})
+    // }
+
+    getOwnerName(ownerId, projId) {
+        fetch(getCommentSenderDataRoute, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(ownerId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                let o = this.state.owners;
+                o[projId] = data['username'];
+                this.setState({owners: o});
+            } else {
+                return "failed";
+            }
+          });
     }
 
     getLikeCount(projId) {
@@ -469,11 +522,9 @@ class MainComponent extends React.Component {
             headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
             body: JSON.stringify(projId)
           }).then(res => res.json()).then(data => {
-            if(data) {
-                return data;
-            } else {
-                return "failed";
-            }
+                let l = this.state.likes;
+                l[projId] = data;
+                this.setState({likes: l});
           });
     }
 
@@ -483,11 +534,9 @@ class MainComponent extends React.Component {
             headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
             body: JSON.stringify(projId)
           }).then(res => res.json()).then(data => {
-            if(data) {
-                return data;
-            } else {
-                return "failed";
-            }
+                let c = this.state.comments;
+                c[projId] = data;
+                this.setState({comments: c});
           });
     }
 
@@ -505,13 +554,15 @@ class CreateProjectComponent extends React.Component {
             repoLink:"",
             userID: "",
             projectID: "",
-            collaborators:[]
+            collaborators:"",
+            collabIds:[]
         };
     }
 
     componentDidMount() {
         this.getUserName();
         this.getUserID();
+        //this.setCollabs();
     }
 
     render() {  
@@ -559,7 +610,7 @@ class CreateProjectComponent extends React.Component {
 
                 ce('div', {id: 'newProjectCollabPromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'}, 'Invite Collaborator'),
-                    ce('textarea', {id: 'newProjectCollabInput', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...'})
+                    ce('textarea', {id: 'collaborators', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...', value: this.state.collaborators, onChange: e => this.changeHandler(e)})
                 ),
 
                 ce('button', {id: 'createNewProjectBtn', onClick: () =>  {
@@ -584,6 +635,50 @@ class CreateProjectComponent extends React.Component {
         });
     }
 
+    getCollaboratorID(username) {
+        fetch(getCollaboratorIDRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(username)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                //console.log(data);
+              //selectedProjectId = data;
+              //this.props.goToProjectView();
+              return data;
+            } else {
+              console.log("fail");
+            }
+          });
+    }
+
+    setCollabs(){
+        const collaboratorsString = this.state.collaborators; 
+        const collaborators = collaboratorsString.split(",");
+        //const collabIds = [];
+        collaborators.forEach(collab => {
+            (this.state.collabIds.push(this.getCollaboratorID(collab)))
+        })
+        this.state.collabIds.forEach(collabID => {
+           fetch(setCollabsRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify("" + collabID + ","  + selectedProjectId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                console.log(data);
+              // = data;
+              //this.props.goToProjectView();
+            } else {
+              console.log("fail");
+            }
+          }); 
+        })
+
+        
+    }
+    
+
     createProject() {
         const name = this.state.newProjectTitleInput;
         const description = this.state.newProjectDescInput;
@@ -591,6 +686,7 @@ class CreateProjectComponent extends React.Component {
         const ownerId = parseInt(this.state.userID);
         const id = parseInt('1');
         const creationDate = Date.now();
+        //const collabs = this.state.collaborators;
 
         fetch(createProjectRoute, { 
           method: 'POST',
@@ -599,6 +695,7 @@ class CreateProjectComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
             selectedProjectId = data;
+            this.setCollabs();
             this.props.goToProjectView();
           } else {
             console.log("fail");
@@ -627,7 +724,7 @@ class ProjectViewComponent extends React.Component {
             CreationDate: "",
             commentInput: "",
             senderIDHolder: "",
-            Collaborators: [],
+            Collaborators: "",
             Comments: []
         };
     }
