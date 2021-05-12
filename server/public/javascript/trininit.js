@@ -398,7 +398,7 @@ class MainComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay'}, this.state.username)
+                        ce('a', {id:'usernameDisplay', onClick: () => this.props.toProfile()}, this.state.username)
                     )
                 ),
             ),
@@ -448,7 +448,7 @@ class MainComponent extends React.Component {
                             return ce('div', {className: 'ProjListing', key: index},
                                 ce('div', {className: 'ProjListingTitleDiv'},
                                     ce('h3', {className: 'ProjListingTitle'}, project['name']),
-                                    ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), //TODO
+                                    ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]),
                                 ),
                                 ce('p', {className: 'ProjListingDesc'}, project['description']),
                                 ce('div', {className: 'ProjListingEngagementDiv'},
@@ -562,7 +562,7 @@ class CreateProjectComponent extends React.Component {
     componentDidMount() {
         this.getUserName();
         this.getUserID();
-        //this.setCollabs();
+        this.setCollabs();
     }
 
     render() {  
@@ -723,9 +723,10 @@ class ProjectViewComponent extends React.Component {
             Description: "",
             CreationDate: "",
             commentInput: "",
-            senderIDHolder: "",
+            // senderIDHolder: "",
             Collaborators: "",
-            Comments: []
+            Comments: [],
+            senderNames: {}
         };
     }
 
@@ -817,10 +818,8 @@ class ProjectViewComponent extends React.Component {
                     ce('hr', {id: 'commentHr'}),
                     ce('h2', {id: 'commentSecHeader'}, 'Comments'),
                     this.state.Comments.map((comment, index) => {
-                        //infinite loop b/c setstate re-renders, and map recalls getSenderName that sets state
-                        this.getSenderName(comment["userId"]);
                             return ce('div', {className: 'commentCardDiv', key: index}, 
-                            ce('h3', {className: 'commentSender'}, this.state.senderIDHolder),
+                            ce('h3', {className: 'commentSender'}, this.state.senderNames[comment["id"]]),
                             ce('p', {className: 'commentContent'}, comment["comment"]),
                             ce('p', {className: 'sendTime'}, new Date(comment["creationDate"]).toString())
                             )
@@ -887,8 +886,13 @@ class ProjectViewComponent extends React.Component {
           });
     }
 
+    // this.getOwnerName(project['ownerId'], project['id']);
+    // this.getLikeCount(project['id']);
+    // this.getCommentCount(project['id']);
+
     getProjectComments() {
         const projectId = parseInt(selectedProjectId);
+        console.log(projectId);
 
         fetch(getProjectCommentsRoute, { 
             method: 'POST',
@@ -896,7 +900,11 @@ class ProjectViewComponent extends React.Component {
             body: JSON.stringify(projectId)
           }).then(res => res.json()).then(data => {
             if(data) {
+                // console.log(data)
                 this.setState({Comments: data})
+                for (let comment of data) {
+                    this.getSenderName(comment["userId"], comment["id"]);
+                }
             } else {
                 //include some error message
                 // console.log("like failed")
@@ -904,8 +912,10 @@ class ProjectViewComponent extends React.Component {
           });
     }
 
-    getSenderName(idnum) {
+    getSenderName(idnum, idcomm) {
         const senderid = parseInt(idnum);
+        console.log("senderid is " + senderid)
+        console.log("idcomm si " + idcomm)
 
         fetch(getCommentSenderDataRoute, { 
             method: 'POST',
@@ -913,7 +923,9 @@ class ProjectViewComponent extends React.Component {
             body: JSON.stringify(senderid)
           }).then(res => res.json()).then(data => {
             if(data) {
-                this.setState({senderIDHolder: data["username"]});
+                let names = this.state.senderNames;
+                names[idcomm] = data["username"];
+                this.setState({senderNames: names})
             } else {
                 return "failed";
             }
