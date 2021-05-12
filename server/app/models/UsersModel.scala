@@ -69,7 +69,11 @@ class UsersModel(db: Database)(implicit ec: ExecutionContext) {
       case Some(user) => Some(UserData(user.username, user.password, user.major, user.graduationyear, user.githublink)) 
     })
   }
-
+  /**
+    *
+    * @param username
+    * @return a user's ID if they exist in database
+    */
   def getUserId(username: String): Future[Option[Int]] = {
     val matches = db.run(Users.filter(userRow => userRow.username === username).result)
     matches.map(userRows => userRows.headOption match {
