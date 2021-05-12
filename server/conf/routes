@@ -22,7 +22,8 @@ POST       /addComment               controllers.Trininit.addComment
 POST       /getComments              controllers.Trininit.getComments
 POST       /getCommentSenderData     controllers.Trininit.getCommentSenderData
 POST       /setCollabs               controllers.Trininit.setCollabs
-POST       /getCollaboratorID        controllers.TrinInit.getCollaboratorID
+POST       /getCollaboratorID        controllers.Trininit.getCollaboratorID
 POST       /getLikeCount             controllers.Trininit.getLikeCount
 POST       /getCommentCount          controllers.Trininit.getCommentCount
+GET        /getLikedProjects         controllers.Trininit.getLikedProjects
 
