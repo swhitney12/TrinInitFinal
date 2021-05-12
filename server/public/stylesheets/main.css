@@ -104,9 +104,13 @@ body {
     border-radius: 5px;
 }
 
+#submitSearchBtnDiv {
+    width: 1.5%;
+    margin: 0 2% 0 1%;
+}
+
 #searchBtn {
-    margin: 2% 0% 0 30%;
-    padding: 60% 60% 60% 60%;
+    padding: 50% 50% 50% 50%;
     font-size: 20px;
     background-color: transparent;
     border-radius: 5px;
@@ -122,15 +126,36 @@ body {
     background-color: #69FF97;
 }
 
+#logoutBtnDiv {
+    width: 2%;
+    margin-left: 15%;
+}
+
+#logoutBtn {
+    padding: 10% 10% 10% 10%;
+    font-size: 20px;
+    background-color: transparent;
+    border-radius: 5px;
+    border: none;
+    color: rgb(172, 172, 172);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#logoutBtn:hover {
+    color: #69FF97;
+}
+
 #toProfileDiv {
     display: flex;
-    margin-left: 20%;
+    margin-left: 1%;
     align-items: center;
     cursor: pointer;
 }
 
 #profileImageDivBanner {
-    width:20%;
+    /* width:20%; */
+    width: 3em;
 }
 
 #profileImgBanner {
@@ -519,7 +544,7 @@ hr {
 }
 
 #projectLikeBtnDiv {
-    margin: 1% 0% 1% 1%;
+    margin: 1% 0% 1% 0%;
 }
 
 #projectViewLikeBtn {

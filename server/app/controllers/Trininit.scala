@@ -191,4 +191,8 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     }
   }
 
+  def logOut = Action { implicit request =>
+    Ok(Json.toJson(true)).withSession(request.session - "username")
+  }
+
 }

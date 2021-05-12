@@ -4,7 +4,6 @@ const ce = React.createElement
 const profImg = document.getElementById("defaultimg").value;
 const csrfToken = document.getElementById("csrfToken").value;
 const validateRoute = document.getElementById("validateRoute").value;
-//const tasksRoute = document.getElementById("tasksRoute").value;
 const createRoute = document.getElementById("createRoute").value;
 const getUserDataRoute = document.getElementById("getUserDataRoute").value;
 const getOwnerDataRoute = document.getElementById("getOwnerDataRoute").value;
@@ -19,12 +18,10 @@ const getProjectCommentsRoute = document.getElementById("getProjectCommentsRoute
 const getCommentSenderDataRoute = document.getElementById("getCommentSenderDataRoute").value;
 const getLikeCountRoute = document.getElementById("getLikeCountRoute").value;
 const getCommentCountRoute = document.getElementById("getCommentCountRoute").value;
-//const deleteRoute = document.getElementById("deleteRoute").value;
-//const addRoute = document.getElementById("addRoute").value;
-//const logoutRoute = document.getElementById("logoutRoute").value;
 const setCollabsRoute = document.getElementById("setCollabsRoute").value;
 const getCollabsRoute = document.getElementById("getCollabsRoute").value;
 const getLikedProjectsRoute = document.getElementById("getLikedProjectsRoute").value;
+const logOutRoute = document.getElementById("logOutRoute").value;
 
 let selectedProjectId = "";
 let searchInput = "";
@@ -52,16 +49,16 @@ class TrininitReactComponent extends React.Component {
             return ce(LoginComponent, {doLogin: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inProjectState: false, inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
         }
         if(this.state.inProfileState){
-            return ce(ProfileComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
+            return ce(ProfileComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inMainState) {
-            return ce(MainComponent, {toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+            return ce(MainComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inProjectState){
-            return ce(ProjectViewComponent, {toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
+            return ce(ProjectViewComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inCreateProjectState){
-            return ce(CreateProjectComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
+            return ce(CreateProjectComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
 
     }
@@ -248,6 +245,10 @@ class ProfileComponent extends React.Component {
                     }})
                 ),
 
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
+                ),
+
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
@@ -295,9 +296,7 @@ class ProfileComponent extends React.Component {
                     ce('hr'),
 
                     ce('div', {id: 'myProjSecListings'},
-                        //code to insert projects here, template for what will be appended in foreach
                         this.state.filteredProjects.map((project, index) =>
-                        // this.state.MyProjects.map((project, index) =>
                             {
                                 return ce('div', {className: 'ProjListing', key: index},
                                     ce('div', {className: 'ProjListingTitleDiv'},
@@ -305,7 +304,7 @@ class ProfileComponent extends React.Component {
                                             this.props.goToProjectView()
                                             selectedProjectId = project["id"]
                                         }}, project["name"]), 
-                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), //adjust to use ownerid
+                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]),
                                     ),
                                     ce('p', {className: 'ProjListingDesc'}, project["description"]),
                                     ce('div', {className: 'ProjListingEngagementDiv'},
@@ -451,12 +450,12 @@ class MainComponent extends React.Component {
                 ),
                 
                 ce('div', {id: 'logoutBtnDiv'},
-                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.logOut()})
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
                 ),
 
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
-                        ce('img', {id:'profileImgBanner', src: profImg}),
+                        ce('img', {id:'profileImgBanner', src: profImg, onClick: () => this.props.toProfile()}),
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
@@ -478,7 +477,6 @@ class MainComponent extends React.Component {
                 ),
 
                 ce('div', {id: 'myProjectsMainListDiv'},
-                    //insert code here to populate this, use below as template
                     this.state.myProjects.map((project, index) => 
                         ce('h4', {className: 'mainSubheader2', key: index, onClick: () => {
                             this.props.goToProjectView()
@@ -530,10 +528,6 @@ class MainComponent extends React.Component {
 
     changeHandler(e) {
         this.setState({[e.target['id']]: e.target.value });
-    }
-
-    logOut() {
-        //write code here
     }
 
     getUserName() {
@@ -647,6 +641,10 @@ class CreateProjectComponent extends React.Component {
                         this.props.toMain()}
                     })
                 ),
+
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
+                ),
                 
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
@@ -668,7 +666,6 @@ class CreateProjectComponent extends React.Component {
 
                 ce('div', {id: 'newProjectTitlePromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'}, 'Project Title'),
-                    //{type:'text', className:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}
                     ce('input', {type: 'text', id: 'newProjectTitleInput', placeholder: 'Enter Your Project Name...', value: this.state.newProjectTitleInput, onChange: e => this.changeHandler(e)})
                 ),
 
@@ -759,7 +756,6 @@ class ProjectViewComponent extends React.Component {
             Description: "",
             CreationDate: "",
             commentInput: "",
-            // senderIDHolder: "",
             collaborators: "",
             Comments: [],
             senderNames: {}
@@ -773,7 +769,6 @@ class ProjectViewComponent extends React.Component {
         this.getProjectData();
         this.getProjectComments();
         this.getCollaborators();
-        //todo
         this.checkLiked();
     }
 
@@ -796,6 +791,10 @@ class ProjectViewComponent extends React.Component {
                         searchInput = this.state.searchProjectsBannerInput
                         this.props.toMain()
                     }})
+                ),
+
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
                 ),
                 
                 ce('div', {id: 'toProfileDiv'},
@@ -826,17 +825,8 @@ class ProjectViewComponent extends React.Component {
 
                 ce('div', {id: 'projectUserInteractionDiv'},
 
-                    ce('div', {id: 'projectInterestBtnDiv'},
-                        ce('button', {id: 'projectInterestBtn'},
-                            ce('i', {className: "far fa-eye"})
-                        )
-                    ),
-
                     ce('div', {id: 'projectLikeBtnDiv'},
                         this.renderButton()
-                        // ce('button', {id: 'projectViewLikeBtn', onClick: () => this.addToLikes()},
-                        //     ce('i', {className: "far fa-heart"})
-                        // )
                     )
                 ),
 
@@ -919,11 +909,9 @@ class ProjectViewComponent extends React.Component {
           body: JSON.stringify({id, ownerId, name, description, repositoryLink, creationDate})
         }).then(res => res.json()).then(data => {
           if(data) {
-              //change button color?
               this.setState({liked: true});
           } else {
-            //include some error message
-            //   console.log("like failed")
+
           }
         });
     }
@@ -949,15 +937,10 @@ class ProjectViewComponent extends React.Component {
             if(data) {
                 this.setState({Name: data["name"], Description: data["description"], ID: data["id"], OwnerID: data["ownerid"], RepositoryLink: data["repositoryLink"], CreationDate: data["creationDate"]})
             } else {
-                //include some error message
-                //   console.log("like failed")
+
             }
           });
     }
-
-    // this.getOwnerName(project['ownerId'], project['id']);
-    // this.getLikeCount(project['id']);
-    // this.getCommentCount(project['id']);
 
     getProjectComments() {
         const projectId = parseInt(selectedProjectId);
@@ -973,8 +956,7 @@ class ProjectViewComponent extends React.Component {
                     this.getSenderName(comment["userId"], comment["id"]);
                 }
             } else {
-                //include some error message
-                // console.log("like failed")
+
             }
           });
     }
@@ -1025,8 +1007,7 @@ class ProjectViewComponent extends React.Component {
             if(data) {
                 this.getProjectComments();
             } else {
-                //include some error message
-                // console.log("like failed")
+
             }
           });
     }
