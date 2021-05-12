@@ -385,7 +385,7 @@ hr {
     width: 15%;
     height: 81vh;
     position: sticky;
-    top: 10%;
+    top: 9%;
 }
 
 #myProjectsMainTitleDiv {
@@ -442,6 +442,7 @@ hr {
 #rightMainDiv {
     padding-left: 3%;
     width: 200vh;
+    margin-bottom: 2%;
 }
 
 /* Create Project Styles */

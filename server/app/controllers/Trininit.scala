@@ -31,8 +31,6 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
           f(a) 
         }
         case e @ JsError(_) =>  {
-          println(body)
-          println(e)
           Future.successful(Redirect(routes.Trininit.trininitIndex()))
         }
       }
@@ -156,8 +154,6 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   def createProject = Action.async { implicit request =>
     withJsonBody[ProjectData] { pd =>
       projectsModel.createProject(pd).map { projectID =>
-        //project id returns 1 for successful, need to find a new way to pass ID to func
-        println(Json.toJson(projectID))
         Ok(Json.toJson(projectID))
       }
     }
