@@ -1,9 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Dosis:wght@200;300;400;500;600;700;800&family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Nunito:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&family=Orbitron:wght@400;500;600;700;800;900&family=Oswald:wght@200;300;400;500;600;700&family=PT+Mono&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:wght@400;700;900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Vollkorn:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cuprum:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Nunito:ital,wght@0,200;0,300;0,400;1,200;1,300;1,400&family=Open+Sans+Condensed:ital,wght@0,300;0,700;1,300&family=Orbitron:wght@400;500;600;700;800;900&family=Oswald:wght@200;300;400;500;600;700&family=PT+Mono&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:wght@400;700;900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&family=Vollkorn:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-    /* gradient text code  */
-    /* background: linear-gradient( to bottom right, rgb(236, 21, 21), rgb(36, 143, 36));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; */
 
 /* Body Styles */
 body {
@@ -22,46 +18,87 @@ body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-#loginImage {
+#loginImageDiv {
     width: 30%;
-    padding: 20%;
-    background-color: rgb(163, 163, 163);
+    height: 10vh;
+    padding: 8% 20% 32% 20%;
+    font-family: 'Orbitron', sans-serif;
+    background-image: url("../images/loginImg3.png");
     border-radius: 16px 0 0 16px;
 }
 
 #loginImageText {
-    font-size: 50px;
+    font-size: 120px;
+    margin-bottom: 5%;
 }
 
 #trinInitTagline {
-    font-size: 20px;
+    font-size: 25px;
 }
 
 #loginFormDiv {
-    padding: 10%;
+    padding: 6% 6% 6% 8%;
     text-align: center;
 }
 
 #loginText {
     font-size: 50px;
-    padding-bottom: 20%;
+    padding-bottom: 0%;
+}
+
+#createUserText {
+    font-size: 50px;
+    padding-bottom: 0%;
+    margin-top: 0%;
 }
 
 .loginTextInput {
     border: none;
-    border-bottom: #7a7a7a 1px solid;
+    background-color: transparent;
+    outline: none;
+    color: white;
+    border-bottom: rgb(172, 172, 172) 1px solid;
     padding: 7%;
-    margin: 10% 0 10% 0;
+    margin: 0% 0 10% 0;
+}
+
+.loginTextInput:focus {
+    border-bottom: white 1px solid;
+}
+
+#linkText {
+    font-size: 10px;
+    color: rgb(172, 172, 172);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#linkText:hover { 
+    color: #69FF97;
+}
+
+#loginMessage {
+    font-size: 15px;
 }
 
 #loginSubmit {
+    width: 100%;
+    padding: 5% 5% 5% 5%;    
+    margin-top: 5%;
     font-size: 20px;
-    background-color: #7a7a7a;
-    margin-top: 20%;
-    padding: 5% 37% 5% 37%;
-    outline: none;
+    background-color: transparent;
     border-radius: 5px;
-    border: 1px #7a7a7a solid;
+    border: none;
+    outline: none;
+    border: 1px #69FF97 solid;
+    color: #69FF97;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#loginSubmit:hover {
+    color: #386947;
+    background-color: #69FF97;
 }
 
 /* Profile styles */
@@ -79,8 +116,8 @@ body {
 
 #trinInitLogoText {
     margin: 0 0 0 3%;
-    font-size: 50px;
-    font-family: 'Cuprum', sans-serif;
+    font-size: 40px;
+    font-family: 'Orbitron', sans-serif;
     cursor: pointer;
 }
 

@@ -81,9 +81,11 @@ class LoginComponent extends React.Component {
 
         return ce('div', null, 
             ce('div', {id:'loginAreaDiv'},
-                ce('div', {id:'loginImage'},
-                    ce('h2', {id:'loginImageText'}, 'TrinInit'),
-                    ce('h3', {id:'trinInitTagline'}, 'TrinInit Tagline')
+                ce('div', {id:'loginImageDiv'},
+                    ce('div', {id: 'loginTextDiv'},
+                        ce('h2', {id:'loginImageText'}, 'TrinInit'),
+                        ce('h3', {id:'trinInitTagline'}, 'Share. Discover. Collaborate')
+                    )
                 ),
                 ce('div', {id:'loginFormDiv'},
                     ce('p', {id:'loginText'}, 'Welcome'),
@@ -92,11 +94,9 @@ class LoginComponent extends React.Component {
                         ce('br'),
                         ce('input', {type:'password', className:'loginTextInput', id:'loginPassword', placeholder:'password', value: this.state.loginPassword, onChange: e => this.changeHandler(e)}),
                         ce('br'),
-                        ce('button', {onClick: e => this.login(e)}, 'Login'),
-                        ce('br'),
-                        ce('br'),
+                        ce('p', {id: 'linkText', onClick: e => this.props.sendToCU(e)}, 'Don\'t have an account yet? Sign Up'),
                         ce('span', {id: "loginMessage"}, this.state.loginMessage),
-                        ce('button', {onClick: e => this.props.sendToCU(e)}, 'Create a New User')
+                        ce('button', {id: 'loginSubmit', onClick: e => this.login(e)}, 'Login'),
                     )
                 )
             )
@@ -123,6 +123,7 @@ class LoginComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
             this.props.doLogin();
+            this.setState({loginMessage: ""})
           } else {
             this.setState({ loginMessage: "Login Failed" });
           }
@@ -148,24 +149,28 @@ class CreateUserComponent extends React.Component {
 
         return ce('div', null, 
             ce('div', {id:'loginAreaDiv'},
-                ce('div', {id:'loginImage'},
-                    ce('h2', {id:'loginImageText'}, 'Create User'),
+                ce('div', {id:'loginImageDiv'},
+                    ce('div', {id: 'loginTextDiv'},
+                        ce('h2', {id:'loginImageText'}, 'TrinInit'),
+                        ce('h3', {id:'trinInitTagline'}, 'Share. Discover. Collaborate')
+                    )
                 ),
                 ce('div', {id:'loginFormDiv'},
-                ce('p', {id:'loginText'}, 'Create Your User'),
+                ce('p', {id:'createUserText'}, 'Sign Up'),
                     ce('div', {id:'loginForm'},
-                         ce('input', {type:'text', className:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'text', className:'loginTextInput', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'password', className:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'password', className:'loginTextInput', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'text', className:'createUserMajor', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'text', className:'loginTextInput', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'number', className:'createUserGradYear', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'number', className:'loginTextInput', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'text', className:'createUserGithubLink', id:'createUserGithubLink', placeholder:'github lunk', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'text', className:'loginTextInput', id:'createUserGithubLink', placeholder:'github link', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('span', {id: "loginMessage"}, this.state.loginMessage),
-                         ce('button', {onClick: e => this.createUser(e)}, 'Create User'),
+                         ce('p', {id: 'linkText', onClick: () => this.props.toLogin()}, 'Already have an account? Login'),
+                         ce('span', {id: "createMessage"}, this.state.createMessage),
+                         ce('button', {id: 'loginSubmit', onClick: e => this.createUser(e)}, 'Create User'),
                     )
                 )
             )
@@ -193,6 +198,7 @@ class CreateUserComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
             this.props.toLogin();
+            this.setState({createMessage: ""})
           } else {
             this.setState({ createMessage: "User Creation Failed"});
           }
