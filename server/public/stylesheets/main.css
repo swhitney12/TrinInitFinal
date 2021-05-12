@@ -88,6 +88,10 @@ body {
     margin-left: 15%;
 }
 
+#searchProjectsFormBanner {
+    display: flex;
+}
+
 #searchProjectsBannerInput {
     padding: 4% 20% 4% 8%;
     width: 38vw;
@@ -98,6 +102,24 @@ body {
     border: none;
     outline: none;
     border-radius: 5px;
+}
+
+#searchBtn {
+    margin: 2% 0% 0 30%;
+    padding: 60% 60% 60% 60%;
+    font-size: 20px;
+    background-color: transparent;
+    border-radius: 5px;
+    border: none;
+    border: 1px #69FF97 solid;
+    color: #69FF97;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#searchBtn:hover {
+    color: #386947;
+    background-color: #69FF97;
 }
 
 #toProfileDiv {

@@ -232,8 +232,11 @@ class ProfileComponent extends React.Component {
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('div', {id:'searchProjectsFormBanner'},
                         ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
-                        ce('button', {type: 'button', className: 'fa fa-search', onClick: () => this.searchProjects()})
-                    )
+                    ),
+                ),
+
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.props.toMain()})
                 ),
 
                 ce('div', {id: 'toProfileDiv'},
@@ -369,21 +372,24 @@ class MainComponent extends React.Component {
     render() {
         return ce('div', null, 
             ce('div', {id:'siteBanner'},
-
-                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
+                ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
-                    ce('form', {id:'searchProjectsFormBanner'},
-                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
-                    )
+                    ce('div', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
+                    ),
                 ),
 
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.searchProjects()})
+                ),
+                
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay', onClick: () => this.props.toProfile()}, this.state.username)
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -511,21 +517,24 @@ class CreateProjectComponent extends React.Component {
     render() {  
         return ce('div', {id: 'createProjBGDiv'},
             ce('div', {id:'siteBanner'},
-
                 ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
-                    ce('form', {id:'searchProjectsFormBanner'},
-                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
-                    )
+                    ce('div', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
+                    ),
                 ),
 
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.props.toMain()})
+                ),
+                
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay', onClick: () => this.props.toProfile()}, this.state.username)
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -596,6 +605,8 @@ class CreateProjectComponent extends React.Component {
           }
         });
     }
+
+
 }
 
 class ProjectViewComponent extends React.Component {
@@ -633,23 +644,26 @@ class ProjectViewComponent extends React.Component {
 
     render() {
         return ce('div', null, 
-
         
             ce('div', {id:'siteBanner'},
                 ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
-                    ce('form', {id:'searchProjectsFormBanner'},
-                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
-                    )
+                    ce('div', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
+                    ),
                 ),
 
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.props.toMain()})
+                ),
+                
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay', onClick: () => this.props.toProfile()}, this.state.username)
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
