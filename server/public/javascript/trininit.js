@@ -359,6 +359,9 @@ class MainComponent extends React.Component {
             likedProjects: [],
             myProjects: [],
             Projects: [],
+            owners: {},
+            likes: {},
+            comments: {},
             filteredProjects: []
         };
     }
@@ -423,17 +426,17 @@ class MainComponent extends React.Component {
                 ce('div', {id: 'rightMainDiv'},
 
                     ce('div', {id: 'ProjSecListings'},
-                        this.state.Projects.map(project => {
-                            return ce('div', {className: 'ProjListing'},
+                        this.state.Projects.map((project,index) => {
+                            return ce('div', {className: 'ProjListing', key: index},
                                 ce('div', {className: 'ProjListingTitleDiv'},
                                     ce('h3', {className: 'ProjListingTitle'}, project['name']),
-                                    ce('p', {className: 'ProjListingCreator'}, 'Created by '), //TODO
+                                    ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), //TODO
                                 ),
                                 ce('p', {className: 'ProjListingDesc'}, project['description']),
                                 ce('div', {className: 'ProjListingEngagementDiv'},
-                                    ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.likes[project['id']]) + ' Likes'),
                                     ce('div', {className: 'vl'}),
-                                    ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.comments[project['id']]) + ' Comments')
                                 )
                             )
                         })
@@ -457,7 +460,28 @@ class MainComponent extends React.Component {
     getAllProjects() {
         fetch(getAllProjectsRoute).then(res => res.json()).then(data => {
             this.setState({Projects: data})
+            for (let project of data) {
+                this.getOwnerName(project['ownerId'], project['id']);
+                this.getLikeCount(project['id']);
+                this.getCommentCount(project['id']);
+            }
         });
+    }
+
+    getOwnerName(ownerId, projId) {
+        fetch(getCommentSenderDataRoute, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(ownerId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                let o = this.state.owners;
+                o[projId] = data['username'];
+                this.setState({owners: o});
+            } else {
+                return "failed";
+            }
+          });
     }
 
     getLikeCount(projId) {
@@ -466,11 +490,9 @@ class MainComponent extends React.Component {
             headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
             body: JSON.stringify(projId)
           }).then(res => res.json()).then(data => {
-            if(data) {
-                return data;
-            } else {
-                return "failed";
-            }
+                let l = this.state.likes;
+                l[projId] = data;
+                this.setState({likes: l});
           });
     }
 
@@ -480,11 +502,9 @@ class MainComponent extends React.Component {
             headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
             body: JSON.stringify(projId)
           }).then(res => res.json()).then(data => {
-            if(data) {
-                return data;
-            } else {
-                return "failed";
-            }
+                let c = this.state.comments;
+                c[projId] = data;
+                this.setState({comments: c});
           });
     }
 
