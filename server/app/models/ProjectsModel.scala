@@ -64,6 +64,18 @@ class ProjectsModel(db: Database)(implicit ec: ExecutionContext) {
 
   /**
     *
+    * @param projectId
+    * @return all collaborator usernames for a given project
+    */
+  def getCollaborators(projectId: Int): Future[Seq[String]] = {
+    val results = db.run(Userprojects.filter(_.projectid === projectId).result)
+
+    results.flatMap(seq => Future.sequence(seq.map(rel => db.run(Users.filter(_.id === rel.userid).result)
+      .map(res => res.headOption.map(user => user.username)))).map(_.flatten))
+  }
+
+  /**
+    *
     * @param userId
     * @return all projects owned by a user
     */
