@@ -1,4 +1,4 @@
-  @()(implicit request: RequestHeader, flash: Flash)
+@()(implicit request: RequestHeader, flash: Flash)
 
 @main("TrinInit") {
     <input type="hidden" id="csrfToken" value="@helper.CSRF.getToken.value">
@@ -11,12 +11,15 @@
     <input type="hidden" id="likeProjectRoute" value="@routes.Trininit.likeProject()">
     <input type="hidden" id="createProjectRoute" value="@routes.Trininit.createProject()">
     <input type="hidden" id="getUserProjectsRoute" value="@routes.Trininit.getUserProjects()">
+    <input type="hidden" id="getAllProjectsRoute" value="@routes.Trininit.getAllProjects()">
     <input type="hidden" id="getUserIDRoute" value="@routes.Trininit.getUserID()">
     <input type="hidden" id="addCommentRoute" value="@routes.Trininit.addComment()">
     <input type="hidden" id="getProjectCommentsRoute" value="@routes.Trininit.getComments()">
     <input type="hidden" id="getCommentSenderDataRoute" value="@routes.Trininit.getCommentSenderData()">
     <input type="hidden" id="setCollabsRoute" value="@routes.Trininit.setCollabs()">
     <input type="hidden" id="getCollaboratorIDRoute" value="@routes.Trininit.getCollaboratorID()">
+    <input type="hidden" id="getLikeCountRoute" value="@routes.Trininit.getLikeCount()">
+    <input type="hidden" id="getCommentCountRoute" value="@routes.Trininit.getCommentCount()">
 
 
 

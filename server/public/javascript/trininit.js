@@ -11,11 +11,14 @@ const getOwnerDataRoute = document.getElementById("getOwnerDataRoute").value;
 const getProjectDataRoute = document.getElementById("getProjectDataRoute").value;
 const likeProjectRoute = document.getElementById("likeProjectRoute").value;
 const getUserProjectsRoute = document.getElementById("getUserProjectsRoute").value;
+const getAllProjectsRoute = document.getElementById("getAllProjectsRoute").value;
 const createProjectRoute = document.getElementById("createProjectRoute").value;
 const getUserIDRoute = document.getElementById("getUserIDRoute").value;
 const addCommentRoute = document.getElementById("addCommentRoute").value;
 const getProjectCommentsRoute = document.getElementById("getProjectCommentsRoute").value;
 const getCommentSenderDataRoute = document.getElementById("getCommentSenderDataRoute").value;
+const getLikeCountRoute = document.getElementById("getLikeCountRoute").value;
+const getCommentCountRoute = document.getElementById("getCommentCountRoute").value;
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
@@ -220,13 +223,13 @@ class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.getUserInfo();
-        this.getUserProjects();
+        this.getUserProjects()
+        this.searchProjects();
     }
 
     render() {
         return ce('div', null, 
             ce('div', {id:'siteBanner'},
-
                 ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('div', {id:'searchProjectsFormBanner'},
@@ -272,10 +275,6 @@ class ProfileComponent extends React.Component {
                             ce('a', {className:'profileMainSubheader2', href: this.state.GitHubLink, target: '_blank'}, this.state.username)
                         )
                     ),
-
-                    ce('div', {id:'editProfileBtnDiv'},
-                        ce('button', {id: 'editProfileBtn'}, 'Edit Profile')
-                    )
                 ),
 
                 ce('div', {id: 'middleProfileDiv'},
@@ -287,7 +286,8 @@ class ProfileComponent extends React.Component {
 
                     ce('div', {id: 'myProjSecListings'},
                         //code to insert projects here, template for what will be appended in foreach
-                        this.state.MyProjects.map((project, index) =>
+                        this.state.filteredProjects.map((project, index) =>
+                        // this.state.MyProjects.map((project, index) =>
                             {
                                 return ce('div', {className: 'ProjListing', key: index},
                                     ce('div', {className: 'ProjListingTitleDiv'},
@@ -337,14 +337,14 @@ class ProfileComponent extends React.Component {
     getUserProjects() {
         fetch(getUserProjectsRoute).then(res => res.json()).then(data => {
             this.setState({MyProjects: data})
+            this.setState({filteredProjects: data})
         });
     }
 
     searchProjects() {
-        //this code works, searchInput is the wrong name
         console.log(this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
         const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
-        filteredprojs.map(project => console.log(project["name"]));
+        this.setState({filteredProjects: filteredprojs})
     }
 }
 
@@ -358,6 +358,9 @@ class MainComponent extends React.Component {
             likedProjects: [],
             myProjects: [],
             Projects: [],
+            owners: {},
+            likes: {},
+            comments: {},
             filteredProjects: []
         };
     }
@@ -422,20 +425,20 @@ class MainComponent extends React.Component {
                 ce('div', {id: 'rightMainDiv'},
 
                     ce('div', {id: 'ProjSecListings'},
-                        //code to insert projects here, template for what will be appended in foreach
-
-                        ce('div', {className: 'ProjListing'},
-                            ce('div', {className: 'ProjListingTitleDiv'},
-                                ce('h3', {className: 'ProjListingTitle'}, 'ProjectName'),
-                                ce('p', {className: 'ProjListingCreator'}, 'Created by rainihuynh'),
-                            ),
-                            ce('p', {className: 'ProjListingDesc'}, 'Brief Description that should be cut off after a few lines like this one. This is a super cool project idea that everyone should look into...'),
-                            ce('div', {className: 'ProjListingEngagementDiv'},
-                                ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
-                                ce('div', {className: 'vl'}),
-                                ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                        this.state.Projects.map((project,index) => {
+                            return ce('div', {className: 'ProjListing', key: index},
+                                ce('div', {className: 'ProjListingTitleDiv'},
+                                    ce('h3', {className: 'ProjListingTitle'}, project['name']),
+                                    ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), //TODO
+                                ),
+                                ce('p', {className: 'ProjListingDesc'}, project['description']),
+                                ce('div', {className: 'ProjListingEngagementDiv'},
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.likes[project['id']]) + ' Likes'),
+                                    ce('div', {className: 'vl'}),
+                                    ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.comments[project['id']]) + ' Comments')
+                                )
                             )
-                        )
+                        })
                     )
                 ),
 
@@ -454,8 +457,57 @@ class MainComponent extends React.Component {
     }
 
     getAllProjects() {
-        //fetch code
+        fetch(getAllProjectsRoute).then(res => res.json()).then(data => {
+            this.setState({Projects: data})
+            for (let project of data) {
+                this.getOwnerName(project['ownerId'], project['id']);
+                this.getLikeCount(project['id']);
+                this.getCommentCount(project['id']);
+            }
+        });
     }
+
+    getOwnerName(ownerId, projId) {
+        fetch(getCommentSenderDataRoute, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(ownerId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                let o = this.state.owners;
+                o[projId] = data['username'];
+                this.setState({owners: o});
+            } else {
+                return "failed";
+            }
+          });
+    }
+
+    getLikeCount(projId) {
+        fetch(getLikeCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+                let l = this.state.likes;
+                l[projId] = data;
+                this.setState({likes: l});
+          });
+    }
+
+    getCommentCount(projId) {
+        fetch(getCommentCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+                let c = this.state.comments;
+                c[projId] = data;
+                this.setState({comments: c});
+          });
+    }
+
+
 }
 
 class CreateProjectComponent extends React.Component {

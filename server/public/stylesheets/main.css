@@ -71,7 +71,10 @@ body {
     padding-bottom: 0.5%;
     padding-top: 0.8%;
     align-items: center;
+    background-color: rgba(63, 66, 77, 0.986);
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 -4px 20px 0 rgb(0 0 0 / 20%);
+    position: sticky;
+    top: 0;
 }
 
 #trinInitLogoText {
@@ -138,7 +141,8 @@ body {
     width: 25%;
     height: 70vh;
     border-radius: 5px;
-    
+    position: sticky;
+    top: 15%;
 }
 
 #leftProfileImageDiv {
@@ -195,7 +199,8 @@ body {
 }
 
 #middleProfileDiv {
-    margin: 0 2% 0 2%;
+    margin: 0 2% 2% 2%;
+    padding-bottom: 2%;
     width: 110%;
     background-color: rgba(0, 0, 0, 0.178);
     border-radius: 5px;
@@ -295,6 +300,8 @@ hr {
     padding: 2%;
     width: 15%;
     height: 81vh;
+    position: sticky;
+    top: 10%;
 }
 
 #myProjectsMainTitleDiv {
@@ -350,6 +357,7 @@ hr {
 
 #rightMainDiv {
     padding-left: 3%;
+    width: 200vh;
 }
 
 /* Create Project Styles */
