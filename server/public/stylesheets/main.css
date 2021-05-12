@@ -535,6 +535,19 @@ hr {
     transition: 0.3s;
 }
 
+#projectViewLikeBtnFilled {
+    margin: 2% 0% 0 30%;
+    padding: 20% 25% 20% 25%;
+    font-size: 20px;
+    border-radius: 5px;
+    border: none;
+    border: 1px #69FF97 solid;
+    color: #386947;
+    background-color: #69FF97;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
 #projectViewLikeBtn:hover {
     color: #386947;
     background-color: #69FF97;

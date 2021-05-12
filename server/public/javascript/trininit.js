@@ -214,6 +214,9 @@ class ProfileComponent extends React.Component {
             GitHubLink: "",
             MyProjects:[],
             filteredProjects: [],
+            owners: {},
+            likes: {},
+            comments: {},
             Myinterests: "Frontend dev, data visualization, sports, cybersecurity",
             MySkills: "Java, C/C++, React, Javascript, HTML, CSS"
         };
@@ -302,13 +305,13 @@ class ProfileComponent extends React.Component {
                                             this.props.goToProjectView()
                                             selectedProjectId = project["id"]
                                         }}, project["name"]), 
-                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username), //adjust to use ownerid
+                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), //adjust to use ownerid
                                     ),
                                     ce('p', {className: 'ProjListingDesc'}, project["description"]),
                                     ce('div', {className: 'ProjListingEngagementDiv'},
-                                        ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                                        ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.likes[project['id']]) + ' Likes'),
                                         ce('div', {className: 'vl'}),
-                                        ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                                        ce('p', {className: 'ProjListingEngagementInfo'},  String(this.state.comments[project['id']]) + ' Comments')
                                     )
                                 )
                             }
@@ -345,7 +348,52 @@ class ProfileComponent extends React.Component {
         fetch(getUserProjectsRoute).then(res => res.json()).then(data => {
             this.setState({MyProjects: data})
             this.setState({filteredProjects: data})
+            for (let project of data) {
+                this.getOwnerName(project['ownerId'], project['id']);
+                this.getLikeCount(project['id']);
+                this.getCommentCount(project['id']);
+            }
         });
+    }
+
+    getOwnerName(ownerId, projId) {
+        fetch(getCommentSenderDataRoute, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(ownerId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                let o = this.state.owners;
+                o[projId] = data['username'];
+                this.setState({owners: o});
+            } else {
+                return "failed";
+            }
+          });
+    }
+
+    getLikeCount(projId) {
+        fetch(getLikeCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+                let l = this.state.likes;
+                l[projId] = data;
+                this.setState({likes: l});
+          });
+    }
+
+    getCommentCount(projId) {
+        fetch(getCommentCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+                let c = this.state.comments;
+                c[projId] = data;
+                this.setState({comments: c});
+          });
     }
 
     searchProjects() {
@@ -353,6 +401,7 @@ class ProfileComponent extends React.Component {
         const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
         this.setState({filteredProjects: filteredprojs})
     }
+
 
     
 }
@@ -401,6 +450,10 @@ class MainComponent extends React.Component {
                     }})
                 ),
                 
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.logOut()})
+                ),
+
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
@@ -445,7 +498,6 @@ class MainComponent extends React.Component {
                             selectedProjectId = project["id"]}}, 
                             project["name"])
                     )
-                    
                 )
             ),
 
@@ -478,6 +530,10 @@ class MainComponent extends React.Component {
 
     changeHandler(e) {
         this.setState({[e.target['id']]: e.target.value });
+    }
+
+    logOut() {
+        //write code here
     }
 
     getUserName() {
@@ -550,8 +606,6 @@ class MainComponent extends React.Component {
                 this.setState({comments: c});
           });
     }
-
-
 }
 
 class CreateProjectComponent extends React.Component {
@@ -735,7 +789,7 @@ class ProjectViewComponent extends React.Component {
             OwnerID: "",
             Owner: "",
             RepositoryLink: "",
-            Liked: false,
+            liked: false,
             Description: "",
             CreationDate: "",
             commentInput: "",
@@ -752,7 +806,7 @@ class ProjectViewComponent extends React.Component {
         this.getProjectData();
         this.getProjectComments();
         //todo
-        // this.isLiked();
+        this.checkLiked();
     }
 
     render() {
@@ -811,9 +865,10 @@ class ProjectViewComponent extends React.Component {
                     ),
 
                     ce('div', {id: 'projectLikeBtnDiv'},
-                        ce('button', {id: 'projectViewLikeBtn', onClick: () => this.addToLikes()},
-                            ce('i', {className: "far fa-heart"})
-                        )
+                        this.renderButton()
+                        // ce('button', {id: 'projectViewLikeBtn', onClick: () => this.addToLikes()},
+                        //     ce('i', {className: "far fa-heart"})
+                        // )
                     )
                 ),
 
@@ -831,7 +886,10 @@ class ProjectViewComponent extends React.Component {
 
                     ce('div', {id: 'commentInputDiv'},
                         ce('textarea', {id: 'commentInput', rows: '2', cols: '100', placeholder: 'Type Your Comment...', value: this.state.commentInput, onChange: e => this.changeHandler(e)}),
-                        ce('button', {id: 'commentSendBtn', onClick: () => this.addProjectComment()}, 
+                        ce('button', {id: 'commentSendBtn', onClick: () => {
+                            this.addProjectComment()
+                            this.setState({commentInput: ""})
+                        }}, 
                             ce('i', {className: 'fas fa-paper-plane'})
                         )
                     ),
@@ -883,11 +941,22 @@ class ProjectViewComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
               //change button color?
+              this.setState({liked: true});
           } else {
             //include some error message
             //   console.log("like failed")
           }
         });
+    }
+
+    checkLiked() {
+        fetch(getLikedProjectsRoute).then(res => res.json()).then(data => {
+            data.map(project => {
+                if(project["id"] === this.state.ID) {
+                    this.setState({liked: true})
+                }
+            })
+        })
     }
 
     getProjectData() {
@@ -947,6 +1016,19 @@ class ProjectViewComponent extends React.Component {
                 return "failed";
             }
           });
+    }
+
+    renderButton() {
+        if(!this.state.liked) {
+            return ce('button', {id: 'projectViewLikeBtn', onClick: () => this.addToLikes()},
+                ce('i', {className: "far fa-heart"})
+            )
+        } else {
+            return ce('button', {id: 'projectViewLikeBtnFilled', onClick: () => this.addToLikes()},
+                ce('i', {className: "far fa-heart"})
+            )
+        }
+
     }
 
     addProjectComment() {
