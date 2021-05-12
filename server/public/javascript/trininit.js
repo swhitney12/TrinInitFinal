@@ -335,17 +335,14 @@ class ProfileComponent extends React.Component {
     getUserProjects() {
         fetch(getUserProjectsRoute).then(res => res.json()).then(data => {
             this.setState({MyProjects: data})
+            this.setState({filteredProjects: data})
         });
     }
 
     searchProjects() {
-        //this code works, searchInput is the wrong name
-        console.log(this.state.MyProjects)
-        // if(this.state.searchProjectsBannerInput != "") {
-            console.log(this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
-            const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
-            this.setState({filteredProjects: filteredprojs})
-        // } else this.setState({filteredProjects: this.state.MyProjects})
+        console.log(this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
+        const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
+        this.setState({filteredProjects: filteredprojs})
     }
 }
 
