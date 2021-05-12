@@ -412,7 +412,10 @@ class MainComponent extends React.Component {
                     ce('div', {id: 'myProjectsMainListDiv'},
                         //insert code here to populate this, use below as template
                         this.state.myProjects.map((project, index) => 
-                            ce('h4', {className: 'mainSubheader2', key: index}, project["name"])
+                            ce('h4', {className: 'mainSubheader2', key: index, onClick: () => {
+                                this.props.goToProjectView()
+                                selectedProjectId = project["id"]}}, 
+                                project["name"])
                         )
                     ),
 
