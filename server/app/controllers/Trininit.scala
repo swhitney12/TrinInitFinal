@@ -103,21 +103,20 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
 
   def setCollabs = Action.async {implicit request =>
     withJsonBody[String] {argString =>
-      println("sdsf: "+ argString);
-      val argArray = argString.split(",");
-      println("the first element of this array is " + argArray(0));
-      projectsModel.addCollaborator(argArray(0).toInt, argArray(1).toInt).map { collabNum =>
-        Ok(Json.toJson(collabNum))
+      val projId = argString.split(";")(1).toInt
+      val username = argString.split(";")(0)
+
+      userModel.getUserId(username).flatMap { 
+        case None => Future.successful(Ok(Json.toJson(false)))
+        case Some(userId) => projectsModel.addCollaborator(projId, userId)
+          .map(ret => Ok(Json.toJson(ret > 0)))
       }
     }
-
   }
 
-  def getCollaboratorID = Action.async {implicit request =>
-    withJsonBody[String] { collab =>
-      userModel.getUserId(collab).map { data =>
-        Ok(Json.toJson(data))
-      }
+  def getCollabs = Action.async { implicit request =>
+    withJsonBody[Int] { projId => 
+      projectsModel.getCollaborators(projId).map(seq => Ok(Json.toJson(seq.mkString(", "))))
     }
   }
 
