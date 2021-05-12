@@ -146,9 +146,11 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
 
   def likeProject = Action.async { implicit request =>
     //change to withsessionuserid to pass into likeproject, hardcoded for now
-    withJsonBody[ProjectData] {pd =>
-      projectsModel.likeProject(pd.id, 1).map(like => Ok(Json.toJson(true)))
-    }
+    withSessionUserid(userid => {
+      withJsonBody[ProjectData] {pd =>
+        projectsModel.likeProject(pd.id, userid).map(like => Ok(Json.toJson(true)))
+      }
+    })
   }
   
   def createProject = Action.async { implicit request =>
