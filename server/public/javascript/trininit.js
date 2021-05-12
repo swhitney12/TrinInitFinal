@@ -4,7 +4,6 @@ const ce = React.createElement
 const profImg = document.getElementById("defaultimg").value;
 const csrfToken = document.getElementById("csrfToken").value;
 const validateRoute = document.getElementById("validateRoute").value;
-//const tasksRoute = document.getElementById("tasksRoute").value;
 const createRoute = document.getElementById("createRoute").value;
 const getUserDataRoute = document.getElementById("getUserDataRoute").value;
 const getOwnerDataRoute = document.getElementById("getOwnerDataRoute").value;
@@ -19,12 +18,10 @@ const getProjectCommentsRoute = document.getElementById("getProjectCommentsRoute
 const getCommentSenderDataRoute = document.getElementById("getCommentSenderDataRoute").value;
 const getLikeCountRoute = document.getElementById("getLikeCountRoute").value;
 const getCommentCountRoute = document.getElementById("getCommentCountRoute").value;
-//const deleteRoute = document.getElementById("deleteRoute").value;
-//const addRoute = document.getElementById("addRoute").value;
-//const logoutRoute = document.getElementById("logoutRoute").value;
 const setCollabsRoute = document.getElementById("setCollabsRoute").value;
 const getCollabsRoute = document.getElementById("getCollabsRoute").value;
 const getLikedProjectsRoute = document.getElementById("getLikedProjectsRoute").value;
+const logOutRoute = document.getElementById("logOutRoute").value;
 
 let selectedProjectId = "";
 let searchInput = "";
@@ -52,16 +49,16 @@ class TrininitReactComponent extends React.Component {
             return ce(LoginComponent, {doLogin: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), sendToCU: () => this.setState({inProjectState: false, inCreateUserState: true, inMainState: false, inProfileState: false, inLoginState: false})})
         }
         if(this.state.inProfileState){
-            return ce(ProfileComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
+            return ce(ProfileComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inMainState) {
-            return ce(MainComponent, {toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+            return ce(MainComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inProjectState){
-            return ce(ProjectViewComponent, {toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
+            return ce(ProjectViewComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inCreateProjectState){
-            return ce(CreateProjectComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
+            return ce(CreateProjectComponent, {logOut: () => this.setState({inProjectState:false, inProfileState: false, inLoginState:true, inCreateUserState: false, inMainState: false}), goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
 
     }
@@ -84,9 +81,11 @@ class LoginComponent extends React.Component {
 
         return ce('div', null, 
             ce('div', {id:'loginAreaDiv'},
-                ce('div', {id:'loginImage'},
-                    ce('h2', {id:'loginImageText'}, 'TrinInit'),
-                    ce('h3', {id:'trinInitTagline'}, 'TrinInit Tagline')
+                ce('div', {id:'loginImageDiv'},
+                    ce('div', {id: 'loginTextDiv'},
+                        ce('h2', {id:'loginImageText'}, 'TrinInit'),
+                        ce('h3', {id:'trinInitTagline'}, 'Share. Discover. Collaborate')
+                    )
                 ),
                 ce('div', {id:'loginFormDiv'},
                     ce('p', {id:'loginText'}, 'Welcome'),
@@ -95,11 +94,9 @@ class LoginComponent extends React.Component {
                         ce('br'),
                         ce('input', {type:'password', className:'loginTextInput', id:'loginPassword', placeholder:'password', value: this.state.loginPassword, onChange: e => this.changeHandler(e)}),
                         ce('br'),
-                        ce('button', {onClick: e => this.login(e)}, 'Login'),
-                        ce('br'),
-                        ce('br'),
+                        ce('p', {id: 'linkText', onClick: e => this.props.sendToCU(e)}, 'Don\'t have an account yet? Sign Up'),
                         ce('span', {id: "loginMessage"}, this.state.loginMessage),
-                        ce('button', {onClick: e => this.props.sendToCU(e)}, 'Create a New User')
+                        ce('button', {id: 'loginSubmit', onClick: e => this.login(e)}, 'Login'),
                     )
                 )
             )
@@ -126,6 +123,7 @@ class LoginComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
             this.props.doLogin();
+            this.setState({loginMessage: ""})
           } else {
             this.setState({ loginMessage: "Login Failed" });
           }
@@ -151,24 +149,28 @@ class CreateUserComponent extends React.Component {
 
         return ce('div', null, 
             ce('div', {id:'loginAreaDiv'},
-                ce('div', {id:'loginImage'},
-                    ce('h2', {id:'loginImageText'}, 'Create User'),
+                ce('div', {id:'loginImageDiv'},
+                    ce('div', {id: 'loginTextDiv'},
+                        ce('h2', {id:'loginImageText'}, 'TrinInit'),
+                        ce('h3', {id:'trinInitTagline'}, 'Share. Discover. Collaborate')
+                    )
                 ),
                 ce('div', {id:'loginFormDiv'},
-                ce('p', {id:'loginText'}, 'Create Your User'),
+                ce('p', {id:'createUserText'}, 'Sign Up'),
                     ce('div', {id:'loginForm'},
-                         ce('input', {type:'text', className:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'text', className:'loginTextInput', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'password', className:'createUserPass', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'password', className:'loginTextInput', id:'createUserPass', placeholder:'password', value: this.state.createUserPass, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'text', className:'createUserMajor', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'text', className:'loginTextInput', id:'createUserMajor', placeholder:'major', value: this.state.createUserMajor, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'number', className:'createUserGradYear', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'number', className:'loginTextInput', id:'createUserGradYear', placeholder:'grad year', value: this.state.createUserGradYear, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('input', {type:'text', className:'createUserGithubLink', id:'createUserGithubLink', placeholder:'github lunk', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
+                         ce('input', {type:'text', className:'loginTextInput', id:'createUserGithubLink', placeholder:'github link', value: this.state.createUserGithubLink, onChange: e => this.changeHandler(e)}),
                          ce('br'),
-                         ce('span', {id: "loginMessage"}, this.state.loginMessage),
-                         ce('button', {onClick: e => this.createUser(e)}, 'Create User'),
+                         ce('p', {id: 'linkText', onClick: () => this.props.toLogin()}, 'Already have an account? Login'),
+                         ce('span', {id: "createMessage"}, this.state.createMessage),
+                         ce('button', {id: 'loginSubmit', onClick: e => this.createUser(e)}, 'Create User'),
                     )
                 )
             )
@@ -196,6 +198,7 @@ class CreateUserComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
             this.props.toLogin();
+            this.setState({createMessage: ""})
           } else {
             this.setState({ createMessage: "User Creation Failed"});
           }
@@ -214,6 +217,9 @@ class ProfileComponent extends React.Component {
             GitHubLink: "",
             MyProjects:[],
             filteredProjects: [],
+            owners: {},
+            likes: {},
+            comments: {},
             Myinterests: "Frontend dev, data visualization, sports, cybersecurity",
             MySkills: "Java, C/C++, React, Javascript, HTML, CSS"
         };
@@ -243,6 +249,10 @@ class ProfileComponent extends React.Component {
                         searchInput = this.state.searchProjectsBannerInput
                         this.props.toMain()
                     }})
+                ),
+
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
                 ),
 
                 ce('div', {id: 'toProfileDiv'},
@@ -292,9 +302,7 @@ class ProfileComponent extends React.Component {
                     ce('hr'),
 
                     ce('div', {id: 'myProjSecListings'},
-                        //code to insert projects here, template for what will be appended in foreach
                         this.state.filteredProjects.map((project, index) =>
-                        // this.state.MyProjects.map((project, index) =>
                             {
                                 return ce('div', {className: 'ProjListing', key: index},
                                     ce('div', {className: 'ProjListingTitleDiv'},
@@ -302,13 +310,13 @@ class ProfileComponent extends React.Component {
                                             this.props.goToProjectView()
                                             selectedProjectId = project["id"]
                                         }}, project["name"]), 
-                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.username), //adjust to use ownerid
+                                        ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]),
                                     ),
                                     ce('p', {className: 'ProjListingDesc'}, project["description"]),
                                     ce('div', {className: 'ProjListingEngagementDiv'},
-                                        ce('p', {className: 'ProjListingEngagementInfo'}, '10 Interested Collaborators'),
+                                        ce('p', {className: 'ProjListingEngagementInfo'}, String(this.state.likes[project['id']]) + ' Likes'),
                                         ce('div', {className: 'vl'}),
-                                        ce('p', {className: 'ProjListingEngagementInfo'}, '20 Comments')
+                                        ce('p', {className: 'ProjListingEngagementInfo'},  String(this.state.comments[project['id']]) + ' Comments')
                                     )
                                 )
                             }
@@ -345,7 +353,52 @@ class ProfileComponent extends React.Component {
         fetch(getUserProjectsRoute).then(res => res.json()).then(data => {
             this.setState({MyProjects: data})
             this.setState({filteredProjects: data})
+            for (let project of data) {
+                this.getOwnerName(project['ownerId'], project['id']);
+                this.getLikeCount(project['id']);
+                this.getCommentCount(project['id']);
+            }
         });
+    }
+
+    getOwnerName(ownerId, projId) {
+        fetch(getCommentSenderDataRoute, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(ownerId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                let o = this.state.owners;
+                o[projId] = data['username'];
+                this.setState({owners: o});
+            } else {
+                return "failed";
+            }
+          });
+    }
+
+    getLikeCount(projId) {
+        fetch(getLikeCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+                let l = this.state.likes;
+                l[projId] = data;
+                this.setState({likes: l});
+          });
+    }
+
+    getCommentCount(projId) {
+        fetch(getCommentCountRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(projId)
+          }).then(res => res.json()).then(data => {
+                let c = this.state.comments;
+                c[projId] = data;
+                this.setState({comments: c});
+          });
     }
 
     searchProjects() {
@@ -353,6 +406,7 @@ class ProfileComponent extends React.Component {
         const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
         this.setState({filteredProjects: filteredprojs})
     }
+
 
     
 }
@@ -401,9 +455,13 @@ class MainComponent extends React.Component {
                     }})
                 ),
                 
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
+                ),
+
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
-                        ce('img', {id:'profileImgBanner', src: profImg}),
+                        ce('img', {id:'profileImgBanner', src: profImg, onClick: () => this.props.toProfile()}),
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
@@ -425,7 +483,6 @@ class MainComponent extends React.Component {
                 ),
 
                 ce('div', {id: 'myProjectsMainListDiv'},
-                    //insert code here to populate this, use below as template
                     this.state.myProjects.map((project, index) => 
                         ce('h4', {className: 'mainSubheader2', key: index, onClick: () => {
                             this.props.goToProjectView()
@@ -445,7 +502,6 @@ class MainComponent extends React.Component {
                             selectedProjectId = project["id"]}}, 
                             project["name"])
                     )
-                    
                 )
             ),
 
@@ -550,8 +606,6 @@ class MainComponent extends React.Component {
                 this.setState({comments: c});
           });
     }
-
-
 }
 
 class CreateProjectComponent extends React.Component {
@@ -593,6 +647,10 @@ class CreateProjectComponent extends React.Component {
                         this.props.toMain()}
                     })
                 ),
+
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
+                ),
                 
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
@@ -614,7 +672,6 @@ class CreateProjectComponent extends React.Component {
 
                 ce('div', {id: 'newProjectTitlePromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'}, 'Project Title'),
-                    //{type:'text', className:'createUserName', id:'createUserName', placeholder:'username', value: this.state.createUserName, onChange: e => this.changeHandler(e)}
                     ce('input', {type: 'text', id: 'newProjectTitleInput', placeholder: 'Enter Your Project Name...', value: this.state.newProjectTitleInput, onChange: e => this.changeHandler(e)})
                 ),
 
@@ -701,11 +758,10 @@ class ProjectViewComponent extends React.Component {
             OwnerID: "",
             Owner: "",
             RepositoryLink: "",
-            Liked: false,
+            liked: false,
             Description: "",
             CreationDate: "",
             commentInput: "",
-            // senderIDHolder: "",
             collaborators: "",
             Comments: [],
             senderNames: {}
@@ -719,8 +775,7 @@ class ProjectViewComponent extends React.Component {
         this.getProjectData();
         this.getProjectComments();
         this.getCollaborators();
-        //todo
-        // this.isLiked();
+        this.checkLiked();
     }
 
     render() {
@@ -742,6 +797,10 @@ class ProjectViewComponent extends React.Component {
                         searchInput = this.state.searchProjectsBannerInput
                         this.props.toMain()
                     }})
+                ),
+
+                ce('div', {id: 'logoutBtnDiv'},
+                    ce('button', {type: 'button', id: 'logoutBtn', className: 'fas fa-sign-out-alt', onClick: () => this.props.logOut()})
                 ),
                 
                 ce('div', {id: 'toProfileDiv'},
@@ -772,16 +831,8 @@ class ProjectViewComponent extends React.Component {
 
                 ce('div', {id: 'projectUserInteractionDiv'},
 
-                    ce('div', {id: 'projectInterestBtnDiv'},
-                        ce('button', {id: 'projectInterestBtn'},
-                            ce('i', {className: "far fa-eye"})
-                        )
-                    ),
-
                     ce('div', {id: 'projectLikeBtnDiv'},
-                        ce('button', {id: 'projectViewLikeBtn', onClick: () => this.addToLikes()},
-                            ce('i', {className: "far fa-heart"})
-                        )
+                        this.renderButton()
                     )
                 ),
 
@@ -799,7 +850,10 @@ class ProjectViewComponent extends React.Component {
 
                     ce('div', {id: 'commentInputDiv'},
                         ce('textarea', {id: 'commentInput', rows: '2', cols: '100', placeholder: 'Type Your Comment...', value: this.state.commentInput, onChange: e => this.changeHandler(e)}),
-                        ce('button', {id: 'commentSendBtn', onClick: () => this.addProjectComment()}, 
+                        ce('button', {id: 'commentSendBtn', onClick: () => {
+                            this.addProjectComment()
+                            this.setState({commentInput: ""})
+                        }}, 
                             ce('i', {className: 'fas fa-paper-plane'})
                         )
                     ),
@@ -861,12 +915,21 @@ class ProjectViewComponent extends React.Component {
           body: JSON.stringify({id, ownerId, name, description, repositoryLink, creationDate})
         }).then(res => res.json()).then(data => {
           if(data) {
-              //change button color?
+              this.setState({liked: true});
           } else {
-            //include some error message
-            //   console.log("like failed")
+
           }
         });
+    }
+
+    checkLiked() {
+        fetch(getLikedProjectsRoute).then(res => res.json()).then(data => {
+            data.map(project => {
+                if(project["id"] === this.state.ID) {
+                    this.setState({liked: true})
+                }
+            })
+        })
     }
 
     getProjectData() {
@@ -880,15 +943,10 @@ class ProjectViewComponent extends React.Component {
             if(data) {
                 this.setState({Name: data["name"], Description: data["description"], ID: data["id"], OwnerID: data["ownerid"], RepositoryLink: data["repositoryLink"], CreationDate: data["creationDate"]})
             } else {
-                //include some error message
-                //   console.log("like failed")
+
             }
           });
     }
-
-    // this.getOwnerName(project['ownerId'], project['id']);
-    // this.getLikeCount(project['id']);
-    // this.getCommentCount(project['id']);
 
     getProjectComments() {
         const projectId = parseInt(selectedProjectId);
@@ -904,8 +962,7 @@ class ProjectViewComponent extends React.Component {
                     this.getSenderName(comment["userId"], comment["id"]);
                 }
             } else {
-                //include some error message
-                // console.log("like failed")
+
             }
           });
     }
@@ -928,6 +985,19 @@ class ProjectViewComponent extends React.Component {
           });
     }
 
+    renderButton() {
+        if(!this.state.liked) {
+            return ce('button', {id: 'projectViewLikeBtn', onClick: () => this.addToLikes()},
+                ce('i', {className: "far fa-heart"})
+            )
+        } else {
+            return ce('button', {id: 'projectViewLikeBtnFilled', onClick: () => this.addToLikes()},
+                ce('i', {className: "far fa-heart"})
+            )
+        }
+
+    }
+
     addProjectComment() {
         const id = parseInt('1');
         const projectId = this.state.ID;
@@ -943,8 +1013,7 @@ class ProjectViewComponent extends React.Component {
             if(data) {
                 this.getProjectComments();
             } else {
-                //include some error message
-                // console.log("like failed")
+
             }
           });
     }

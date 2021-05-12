@@ -26,4 +26,5 @@ POST       /getCollabs               controllers.Trininit.getCollabs
 POST       /getLikeCount             controllers.Trininit.getLikeCount
 POST       /getCommentCount          controllers.Trininit.getCommentCount
 GET        /getLikedProjects         controllers.Trininit.getLikedProjects
+GET        /logOut                   controllers.Trininit.logOut
 
