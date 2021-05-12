@@ -69,6 +69,14 @@ class UsersModel(db: Database)(implicit ec: ExecutionContext) {
       case Some(user) => Some(UserData(user.username, user.password, user.major, user.graduationyear, user.githublink)) 
     })
   }
+
+    def getUserId(username: String): Future[Option[Int]] = {
+    val matches = db.run(Users.filter(userRow => userRow.username === username).result)
+    matches.map(userRows => userRows.headOption match {
+      case None => None
+      case Some(user) => Some(user.id)
+    })
+  }
 }
 
 case class UserData(username: String, password: String, major: String,
