@@ -70,7 +70,7 @@ class UsersModel(db: Database)(implicit ec: ExecutionContext) {
     })
   }
 
-    def getUserId(username: String): Future[Option[Int]] = {
+  def getUserId(username: String): Future[Option[Int]] = {
     val matches = db.run(Users.filter(userRow => userRow.username === username).result)
     matches.map(userRows => userRows.headOption match {
       case None => None
