@@ -199,10 +199,6 @@ class CreateUserComponent extends React.Component {
     }
 }
 
-
-
-
-
 class ProfileComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -427,7 +423,7 @@ class MainComponent extends React.Component {
                             return ce('div', {className: 'ProjListing', key: index},
                                 ce('div', {className: 'ProjListingTitleDiv'},
                                     ce('h3', {className: 'ProjListingTitle'}, project['name']),
-                                    ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), //TODO
+                                    ce('p', {className: 'ProjListingCreator'}, 'Created by ' + this.state.owners[project['id']]), 
                                 ),
                                 ce('p', {className: 'ProjListingDesc'}, project['description']),
                                 ce('div', {className: 'ProjListingEngagementDiv'},
