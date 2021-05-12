@@ -491,9 +491,7 @@ class MainComponent extends React.Component {
     }
 
     getLikedProjects() {
-        console.log("likedproj running")
         fetch(getLikedProjectsRoute).then(res => res.json()).then(data => {
-            console.log("liked proj data is " + data);
             this.setState({likedProjects: data});
         });
     }
