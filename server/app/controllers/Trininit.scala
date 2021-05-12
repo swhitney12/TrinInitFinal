@@ -39,6 +39,7 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     }.getOrElse(Future.successful(Redirect(routes.Trininit.trininitIndex())))
   }
 
+
   def withSessionUsername(f: String => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
     request.session.get("username").map(f).getOrElse(Future.successful(Ok(Json.toJson(Seq.empty[String]))))
   }
@@ -100,6 +101,26 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
     })
   }
 
+  def setCollabs = Action.async {implicit request =>
+    withJsonBody[String] {argString =>
+      println("sdsf: "+ argString);
+      val argArray = argString.split(",");
+      println("the first element of this array is " + argArray(0));
+      projectsModel.addCollaborator(argArray(0).toInt, argArray(1).toInt).map { collabNum =>
+        Ok(Json.toJson(collabNum))
+      }
+    }
+
+  }
+
+  def getCollaboratorID = Action.async {implicit request =>
+    withJsonBody[String] { collab =>
+      userModel.getUserId(collab).map { data =>
+        Ok(Json.toJson(data))
+      }
+    }
+  }
+
   def getProjectData = Action.async { implicit request =>
     withJsonBody[Int] {projectid =>
       projectsModel.getProject(projectid).map { project =>
@@ -111,6 +132,12 @@ class Trininit @Inject()(protected val dbConfigProvider: DatabaseConfigProvider,
   def getUserProjects = Action.async { implicit request => 
     withSessionUserid(userid =>{
       projectsModel.getOwnedProjects(userid).map(data => Ok(Json.toJson(data)))
+    })
+  }
+
+  def getLikedProjects = Action.async { implicit request => 
+    withSessionUserid(userid =>{
+      projectsModel.getLikedProjects(userid).map(data => Ok(Json.toJson(data)))
     })
   }
 

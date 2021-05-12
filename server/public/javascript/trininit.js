@@ -22,6 +22,9 @@ const getCommentCountRoute = document.getElementById("getCommentCountRoute").val
 //const deleteRoute = document.getElementById("deleteRoute").value;
 //const addRoute = document.getElementById("addRoute").value;
 //const logoutRoute = document.getElementById("logoutRoute").value;
+const setCollabsRoute = document.getElementById("setCollabsRoute").value;
+const getCollaboratorIDRoute = document.getElementById("getCollaboratorIDRoute").value;
+const getLikedProjectsRoute = document.getElementById("getLikedProjectsRoute").value;
 
 let selectedProjectId = ""
 
@@ -51,7 +54,7 @@ class TrininitReactComponent extends React.Component {
             return ce(ProfileComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inMainState) {
-            return ce(MainComponent, {toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
+            return ce(MainComponent, {goToProjectView: () => this.setState({inProjectState:true ,inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toCreateProjectView: () => this.setState({inCreateProjectState: true, inProjectState:false, inMainState: false, inProfileState: false, inLoginState:false, inCreateUserState: false}), toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false})})
         }
         if(this.state.inProjectState){
             return ce(ProjectViewComponent, {toProfile: () => this.setState({inProjectState:false, inMainState: false, inProfileState: true, inLoginState:false, inCreateUserState: false}), toMain: () => this.setState({inProjectState:false, inMainState: true, inProfileState: false, inLoginState:false, inCreateUserState: false})})
@@ -217,7 +220,7 @@ class ProfileComponent extends React.Component {
 
     componentDidMount() {
         this.getUserInfo();
-        this.getUserProjects()
+        this.getUserProjects();
         this.searchProjects();
     }
 
@@ -228,8 +231,11 @@ class ProfileComponent extends React.Component {
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
                     ce('div', {id:'searchProjectsFormBanner'},
                         ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
-                        ce('button', {type: 'button', className: 'fa fa-search', onClick: () => this.searchProjects()})
-                    )
+                    ),
+                ),
+
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.props.toMain()})
                 ),
 
                 ce('div', {id: 'toProfileDiv'},
@@ -340,6 +346,8 @@ class ProfileComponent extends React.Component {
         const filteredprojs = this.state.MyProjects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
         this.setState({filteredProjects: filteredprojs})
     }
+
+    
 }
 
 class MainComponent extends React.Component {
@@ -363,19 +371,23 @@ class MainComponent extends React.Component {
         this.getUserName();
         this.getUserProjects();
         this.getAllProjects();
+        this.getLikedProjects();
     }
 
     render() {
         return ce('div', null, 
             ce('div', {id:'siteBanner'},
-
-                ce('h1', {id: 'trinInitLogoText'}, 'TrinInit'),
+                ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
-                    ce('form', {id:'searchProjectsFormBanner'},
-                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
-                    )
+                    ce('div', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
+                    ),
                 ),
 
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.searchProjects()})
+                ),
+                
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
@@ -402,7 +414,10 @@ class MainComponent extends React.Component {
                     ce('div', {id: 'myProjectsMainListDiv'},
                         //insert code here to populate this, use below as template
                         this.state.myProjects.map((project, index) => 
-                            ce('h4', {className: 'mainSubheader2', key: index}, project["name"])
+                            ce('h4', {className: 'mainSubheader2', key: index, onClick: () => {
+                                this.props.goToProjectView()
+                                selectedProjectId = project["id"]}}, 
+                                project["name"])
                         )
                     ),
 
@@ -412,7 +427,13 @@ class MainComponent extends React.Component {
 
                     ce('div', {id: 'likedProjectsMainListDiv'},
                         //insert code here to populate this, use below as a template
-                        ce('h4', {className: 'mainSubheader2'}, 'Liked Project 1')
+                        this.state.likedProjects.map((project, index) => 
+                            ce('h4', {className: 'mainSubheader2', key: index, onClick: () => {
+                                this.props.goToProjectView()
+                                selectedProjectId = project["id"]}}, 
+                                project["name"])
+                        )
+                        
                     )
                 ),
 
@@ -450,9 +471,17 @@ class MainComponent extends React.Component {
         });
     }
 
+    getLikedProjects() {
+        fetch(getLikedProjectsRoute).then(res => res.json()).then(data => {
+            console.log(data);
+            this.setState({likedProjects: data})
+        });
+    }
+
     getAllProjects() {
         fetch(getAllProjectsRoute).then(res => res.json()).then(data => {
             this.setState({Projects: data})
+            //this.setState({filteredProjects: data})
             for (let project of data) {
                 this.getOwnerName(project['ownerId'], project['id']);
                 this.getLikeCount(project['id']);
@@ -460,6 +489,12 @@ class MainComponent extends React.Component {
             }
         });
     }
+
+    // searchProjects() {
+    //     console.log(this.state.Projects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput)));
+    //     const filteredprojs = this.state.Projects.filter(project => project["name"].includes(this.state.searchProjectsBannerInput));
+    //     this.setState({filteredProjects: filteredprojs})
+    // }
 
     getOwnerName(ownerId, projId) {
         fetch(getCommentSenderDataRoute, {
@@ -515,33 +550,38 @@ class CreateProjectComponent extends React.Component {
             repoLink:"",
             userID: "",
             projectID: "",
-            collaborators:[]
+            collaborators:"",
+            collabIds:[]
         };
     }
 
     componentDidMount() {
         this.getUserName();
         this.getUserID();
+        this.setCollabs();
     }
 
     render() {  
         return ce('div', {id: 'createProjBGDiv'},
             ce('div', {id:'siteBanner'},
-
                 ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
-                    ce('form', {id:'searchProjectsFormBanner'},
-                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
-                    )
+                    ce('div', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
+                    ),
                 ),
 
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.props.toMain()})
+                ),
+                
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay', onClick: () => this.props.toProfile()}, this.state.username)
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -566,7 +606,7 @@ class CreateProjectComponent extends React.Component {
 
                 ce('div', {id: 'newProjectCollabPromptDiv'},
                     ce('h3', {className: 'newProjectPrompt'}, 'Invite Collaborator'),
-                    ce('textarea', {id: 'newProjectCollabInput', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...'})
+                    ce('textarea', {id: 'collaborators', rows: '1', cols: '50', placeholder: 'Enter Your Collaborator Names...', value: this.state.collaborators, onChange: e => this.changeHandler(e)})
                 ),
 
                 ce('button', {id: 'createNewProjectBtn', onClick: () =>  {
@@ -591,6 +631,50 @@ class CreateProjectComponent extends React.Component {
         });
     }
 
+    getCollaboratorID(username) {
+        fetch(getCollaboratorIDRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify(username)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                //console.log(data);
+              //selectedProjectId = data;
+              //this.props.goToProjectView();
+              return data;
+            } else {
+              console.log("fail");
+            }
+          });
+    }
+
+    setCollabs(){
+        const collaboratorsString = this.state.collaborators; 
+        const collaborators = collaboratorsString.split(",");
+        //const collabIds = [];
+        collaborators.forEach(collab => {
+            (this.state.collabIds.push(this.getCollaboratorID(collab)))
+        })
+        this.state.collabIds.forEach(collabID => {
+           fetch(setCollabsRoute, { 
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Csrf-Token': csrfToken },
+            body: JSON.stringify("" + collabID + ","  + selectedProjectId)
+          }).then(res => res.json()).then(data => {
+            if(data) {
+                console.log(data);
+              // = data;
+              //this.props.goToProjectView();
+            } else {
+              console.log("fail");
+            }
+          }); 
+        })
+
+        
+    }
+    
+
     createProject() {
         const name = this.state.newProjectTitleInput;
         const description = this.state.newProjectDescInput;
@@ -598,6 +682,7 @@ class CreateProjectComponent extends React.Component {
         const ownerId = parseInt(this.state.userID);
         const id = parseInt('1');
         const creationDate = Date.now();
+        //const collabs = this.state.collaborators;
 
         fetch(createProjectRoute, { 
           method: 'POST',
@@ -606,12 +691,15 @@ class CreateProjectComponent extends React.Component {
         }).then(res => res.json()).then(data => {
           if(data) {
             selectedProjectId = data;
+            this.setCollabs();
             this.props.goToProjectView();
           } else {
             console.log("fail");
           }
         });
     }
+
+
 }
 
 class ProjectViewComponent extends React.Component {
@@ -631,9 +719,10 @@ class ProjectViewComponent extends React.Component {
             Description: "",
             CreationDate: "",
             commentInput: "",
-            senderIDHolder: "",
-            Collaborators: [],
-            Comments: []
+            // senderIDHolder: "",
+            Collaborators: "",
+            Comments: [],
+            senderNames: {}
         };
     }
 
@@ -649,23 +738,26 @@ class ProjectViewComponent extends React.Component {
 
     render() {
         return ce('div', null, 
-
         
             ce('div', {id:'siteBanner'},
                 ce('h1', {id: 'trinInitLogoText', onClick: () => this.props.toMain()}, 'TrinInit'),
                 ce('div', {id: 'searchProjectsFormBannerDiv'},
-                    ce('form', {id:'searchProjectsFormBanner'},
-                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...'})
-                    )
+                    ce('div', {id:'searchProjectsFormBanner'},
+                        ce('input', {type:'text', id:'searchProjectsBannerInput', placeholder:'Search for projects and users...', value: this.state.searchProjectsBannerInput, onChange: e => this.changeHandler(e)}),
+                    ),
                 ),
 
+                ce('div', {id:'submitSearchBtnDiv'},
+                    ce('button', {type: 'button', id:'searchBtn', className: 'fa fa-search', onClick: () => this.props.toMain()})
+                ),
+                
                 ce('div', {id: 'toProfileDiv'},
                     ce('div', {id: 'profileImageDivBanner'},
                         ce('img', {id:'profileImgBanner', src: profImg}),
                     ),
 
                     ce('div', {id: 'usernameDisplayDivBanner'},
-                        ce('a', {id:'usernameDisplay', onClick: () => this.props.toProfile()}, this.state.username)
+                        ce('a', {id:'usernameDisplay'}, this.state.username)
                     )
                 ),
             ),
@@ -722,10 +814,8 @@ class ProjectViewComponent extends React.Component {
                     ce('hr', {id: 'commentHr'}),
                     ce('h2', {id: 'commentSecHeader'}, 'Comments'),
                     this.state.Comments.map((comment, index) => {
-                        //infinite loop b/c setstate re-renders, and map recalls getSenderName that sets state
-                        this.getSenderName(comment["userId"]);
                             return ce('div', {className: 'commentCardDiv', key: index}, 
-                            ce('h3', {className: 'commentSender'}, this.state.senderIDHolder),
+                            ce('h3', {className: 'commentSender'}, this.state.senderNames[comment["id"]]),
                             ce('p', {className: 'commentContent'}, comment["comment"]),
                             ce('p', {className: 'sendTime'}, new Date(comment["creationDate"]).toString())
                             )
@@ -792,8 +882,13 @@ class ProjectViewComponent extends React.Component {
           });
     }
 
+    // this.getOwnerName(project['ownerId'], project['id']);
+    // this.getLikeCount(project['id']);
+    // this.getCommentCount(project['id']);
+
     getProjectComments() {
         const projectId = parseInt(selectedProjectId);
+        console.log(projectId);
 
         fetch(getProjectCommentsRoute, { 
             method: 'POST',
@@ -801,7 +896,11 @@ class ProjectViewComponent extends React.Component {
             body: JSON.stringify(projectId)
           }).then(res => res.json()).then(data => {
             if(data) {
+                // console.log(data)
                 this.setState({Comments: data})
+                for (let comment of data) {
+                    this.getSenderName(comment["userId"], comment["id"]);
+                }
             } else {
                 //include some error message
                 // console.log("like failed")
@@ -809,8 +908,10 @@ class ProjectViewComponent extends React.Component {
           });
     }
 
-    getSenderName(idnum) {
+    getSenderName(idnum, idcomm) {
         const senderid = parseInt(idnum);
+        console.log("senderid is " + senderid)
+        console.log("idcomm si " + idcomm)
 
         fetch(getCommentSenderDataRoute, { 
             method: 'POST',
@@ -818,7 +919,9 @@ class ProjectViewComponent extends React.Component {
             body: JSON.stringify(senderid)
           }).then(res => res.json()).then(data => {
             if(data) {
-                this.setState({senderIDHolder: data["username"]});
+                let names = this.state.senderNames;
+                names[idcomm] = data["username"];
+                this.setState({senderNames: names})
             } else {
                 return "failed";
             }
