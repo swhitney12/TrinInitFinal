@@ -1,1 +1,1 @@
-CREATE DATABASE TrinInit WITH OWNER=kcrusius;
+CREATE DATABASE TrinInit WITH OWNER=emersonspradling;
