@@ -486,7 +486,7 @@ hr {
     border-radius: 5px;
 }
 
-#newProjectCollabInput {
+#collaborators {
     padding: 2% 20% 2% 2%;
     font-size: 15px;
     font-family: 'Noto Sans', sans-serif;
