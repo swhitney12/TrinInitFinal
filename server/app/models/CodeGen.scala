@@ -20,15 +20,15 @@ object CodeGen extends App {
 //   )
 // }
 
-object CodeGen extends App {
-slick.codegen.SourceCodeGenerator.run(
-  "slick.jdbc.PostgresProfile",
- "org.postgresql.Driver",
-  "jdbc:postgresql://localhost/trininit?user=swhitney&password=password2",
-  "/Users/sabri/Desktop/TrinInitFinal/server/app",
-  "models", None, None, true, false
-)
-}
+// object CodeGen extends App {
+// slick.codegen.SourceCodeGenerator.run(
+//   "slick.jdbc.PostgresProfile",
+//  "org.postgresql.Driver",
+//   "jdbc:postgresql://localhost/trininit?user=swhitney&password=password2",
+//   "/Users/sabri/Desktop/TrinInitFinal/server/app",
+//   "models", None, None, true, false
+// )
+// }
 
 //  object CodeGen extends App {
 //    slick.codegen.SourceCodeGenerator.run(
